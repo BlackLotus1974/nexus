@@ -1,0 +1,7 @@
+{
+  "version": "1.0.0",
+  "tasksPath": "../tasks.json",
+  "completedTasksPath": "../completed-tasks.json",
+  "configPath": "../taskmaster.config.json",
+  "specsPath": "../.kiro/specs/nexus-fundraising-platform"
+}

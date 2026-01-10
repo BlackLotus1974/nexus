@@ -1,0 +1,16 @@
+# Task ID: 4
+# Title: Implement Bloomerang Integration
+# Status: pending
+# Dependencies: 1
+# Priority: medium
+# Description: Develop Bloomerang CRM integration for non-profit donor management.
+# Details:
+1. Use API key authentication for Bloomerang integration.
+2. Implement the Bloomerang adapter in lib/crm/adapters/bloomerang.ts.
+3. Map Bloomerang Constituent objects to Nexus donor schema.
+4. Sync donation history and giving levels.
+5. Create interactions from engagement activities.
+6. Create Supabase Edge Function: crm-bloomerang-sync.
+
+# Test Strategy:
+Test API key authentication, data mapping, and sync functionality with Jest and mock data.

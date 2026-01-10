@@ -1,0 +1,18 @@
+# Task ID: 12
+# Title: Implement Project-Donor Alignment Algorithm
+# Status: pending
+# Dependencies: 11
+# Priority: high
+# Description: AI-powered matching of donors to projects based on interests and giving patterns.
+# Details:
+1. Create lib/ai/alignment.ts for alignment scoring logic.
+2. Analyze donor interests from intelligence_data JSONB field.
+3. Match against project concept_note and description fields.
+4. Generate alignment score (0-100) with detailed reasoning.
+5. Store results in donor_project_alignments table.
+6. Add analyzeProjectAlignment method to AI orchestrator.
+7. Create Edge Function: project-alignment-generator.
+8. Implement batch alignment calculation for new projects.
+
+# Test Strategy:
+Unit tests for alignment scoring algorithm. Integration tests with mock AI responses. E2E tests for alignment flow.

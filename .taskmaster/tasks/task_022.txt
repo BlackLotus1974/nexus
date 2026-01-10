@@ -1,0 +1,18 @@
+# Task ID: 22
+# Title: Implement Advanced Donor Search
+# Status: pending
+# Dependencies: None
+# Priority: medium
+# Description: Enhanced search with multiple filters and full-text search capabilities.
+# Details:
+1. Add pg_trgm extension and GIN indexes for full-text search.
+2. Create migration for search indexes on donors table.
+3. Filter by location, giving level, last contact date.
+4. Filter by alignment to specific projects.
+5. Filter by relationship strength scores.
+6. Create components/search/AdvancedSearchForm.tsx with filter controls.
+7. Add useAdvancedSearch hook with debounced queries.
+8. Implement search result highlighting.
+
+# Test Strategy:
+Integration tests for search query performance. E2E tests for filter combinations.

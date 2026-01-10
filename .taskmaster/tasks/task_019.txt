@@ -1,0 +1,18 @@
+# Task ID: 19
+# Title: Build Activity Feed Component
+# Status: pending
+# Dependencies: 18
+# Priority: medium
+# Description: Live activity feed showing system events and user actions.
+# Details:
+1. Create components/activity/ActivityFeed.tsx as main container.
+2. Create components/activity/ActivityItem.tsx for individual items.
+3. Show donor intelligence generations with AI provider used.
+4. Show CRM sync events with success/failure status.
+5. Show engagement activities (emails, calls, meetings).
+6. Add filtering by activity type and date range.
+7. Integrate with real-time subscriptions for live updates.
+8. Add infinite scroll pagination.
+
+# Test Strategy:
+E2E tests for activity feed filtering and pagination. Visual regression tests for activity items.

@@ -1,0 +1,15 @@
+# Task ID: 9
+# Title: Implement Email Integration for Relationship Analysis
+# Status: pending
+# Dependencies: 8
+# Priority: medium
+# Description: Connect to email providers for communication pattern analysis.
+# Details:
+1. Implement OAuth 2.0 flows for Google Workspace and Microsoft 365.
+2. Create gmail.ts and outlook.ts adapters for email analysis.
+3. Analyze email metadata for frequency, recency, and tone.
+4. Extract relationship signals and store in relationships table.
+5. Create Edge Function: email-relationship-analyzer.
+
+# Test Strategy:
+Mock email API responses and validate metadata analysis and storage with integration tests.

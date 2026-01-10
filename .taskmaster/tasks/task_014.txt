@@ -1,0 +1,17 @@
+# Task ID: 14
+# Title: Implement Engagement Strategy Generator
+# Status: pending
+# Dependencies: 12
+# Priority: high
+# Description: AI-generated personalized engagement recommendations for donor outreach.
+# Details:
+1. Enhance generateEngagementStrategy in lib/ai/orchestrator.ts.
+2. Consider donor history, preferences, and timing in recommendations.
+3. Recommend outreach type: email, call, meeting, event, social.
+4. Generate personalized messaging suggestions based on donor profile.
+5. Suggest follow-up cadence based on engagement patterns.
+6. Create Edge Function: engagement-strategy-generator.
+7. Add engagement strategy to donor intelligence brief display.
+
+# Test Strategy:
+Unit tests for strategy generation logic. Integration tests with AI provider mocks. User acceptance testing for recommendation quality.

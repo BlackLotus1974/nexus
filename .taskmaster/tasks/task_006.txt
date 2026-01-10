@@ -1,0 +1,15 @@
+# Task ID: 6
+# Title: Create Neon One Integration
+# Status: pending
+# Dependencies: 1
+# Priority: medium
+# Description: Implement Neon One CRM integration for managing donor data.
+# Details:
+1. Use API authentication for Neon One integration.
+2. Develop the Neon One adapter in lib/crm/adapters/neonone.ts.
+3. Map Neon One Account objects to Nexus donor schema.
+4. Sync membership and donation data.
+5. Create Supabase Edge Function: crm-neonone-sync.
+
+# Test Strategy:
+Test API authentication and data synchronization with Jest, ensuring correct data mapping.

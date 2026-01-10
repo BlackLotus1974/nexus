@@ -1,0 +1,17 @@
+# Task ID: 18
+# Title: Implement Real-Time Database Subscriptions
+# Status: pending
+# Dependencies: None
+# Priority: medium
+# Description: Supabase real-time subscriptions for live UI updates.
+# Details:
+1. Enable Supabase Realtime on donors, activity_log, and notifications tables.
+2. Create lib/supabase/realtime.ts subscription manager.
+3. Subscribe to donor updates for live intelligence refresh.
+4. Subscribe to activity_log for live activity feed.
+5. Create useRealtimeSubscription hook for components.
+6. Handle subscription cleanup on component unmount.
+7. Implement reconnection logic for dropped connections.
+
+# Test Strategy:
+Integration tests for subscription lifecycle. E2E tests verifying live updates appear in UI.

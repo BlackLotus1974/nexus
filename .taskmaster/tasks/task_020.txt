@@ -1,0 +1,18 @@
+# Task ID: 20
+# Title: Implement Notification System
+# Status: pending
+# Dependencies: 18
+# Priority: medium
+# Description: User notifications for important events with in-app and email options.
+# Details:
+1. Create notifications table with migration (type, message, read_at, user_id).
+2. Create lib/notifications/service.ts for notification management.
+3. Build components/notifications/NotificationBell.tsx with unread count.
+4. Build components/notifications/NotificationList.tsx dropdown.
+5. Add email notification preferences to user settings.
+6. Create Edge Function: send-notification for triggering notifications.
+7. Integrate with real-time for instant notification delivery.
+8. Add notification settings page.
+
+# Test Strategy:
+Unit tests for notification service. E2E tests for notification display and marking as read.

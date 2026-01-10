@@ -1,0 +1,15 @@
+# Task ID: 5
+# Title: Develop Kindful Integration
+# Status: pending
+# Dependencies: 1
+# Priority: medium
+# Description: Implement Kindful CRM integration for donor management.
+# Details:
+1. Implement OAuth or API key authentication for Kindful.
+2. Develop the Kindful adapter in lib/crm/adapters/kindful.ts.
+3. Map Kindful Contact objects to Nexus donor schema.
+4. Sync donations and campaigns.
+5. Create Supabase Edge Function: crm-kindful-sync.
+
+# Test Strategy:
+Validate authentication methods and data synchronization using Jest tests with mocked Kindful API.

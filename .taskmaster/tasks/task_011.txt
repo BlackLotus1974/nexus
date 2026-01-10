@@ -1,0 +1,18 @@
+# Task ID: 11
+# Title: Build Project Management UI
+# Status: pending
+# Dependencies: None
+# Priority: high
+# Description: Create complete UI for managing fundraising projects with list, detail, and creation views.
+# Details:
+1. Create app/projects/page.tsx for project list with grid layout.
+2. Create app/projects/[id]/page.tsx for project detail view.
+3. Create app/projects/new/page.tsx for creating projects.
+4. Build components/project/ProjectCard.tsx for project summaries.
+5. Build components/project/ProjectForm.tsx for project creation/editing.
+6. Build components/project/ConceptNoteUpload.tsx for document uploads.
+7. Extend useProjects hook in lib/hooks/useProjects.ts for CRUD operations.
+8. Add project slice to Redux store if needed.
+
+# Test Strategy:
+Use Playwright E2E tests for project CRUD flows. Jest unit tests for ProjectForm validation and useProjects hook.

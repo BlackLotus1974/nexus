@@ -1,0 +1,19 @@
+# Task ID: 25
+# Title: Implement E2E Test Scenarios
+# Status: pending
+# Dependencies: 24
+# Priority: medium
+# Description: Comprehensive Playwright end-to-end tests for critical user flows.
+# Details:
+1. Test complete auth flow (signup, login, logout, password reset).
+2. Test donor CRUD operations (create, view, edit, delete).
+3. Test AI intelligence generation flow with mock responses.
+4. Test CRM connection and sync flow.
+5. Test project management (create, edit, view alignments).
+6. Test search and filtering functionality.
+7. Test real-time notifications.
+8. Add visual regression tests for key pages.
+9. Configure tests to run in CI.
+
+# Test Strategy:
+Run Playwright tests in headless mode. Use test fixtures for authentication. Record traces on failure.

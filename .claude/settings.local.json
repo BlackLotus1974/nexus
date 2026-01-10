@@ -1,0 +1,211 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir)",
+      "Bash(dir:*)",
+      "Bash(find:*)",
+      "Bash(tree:*)",
+      "Bash(git add:*)",
+      "Bash(git push:*)",
+      "Bash(git checkout:*)",
+      "Bash(git merge:*)",
+      "Bash(git branch:*)",
+      "Bash(npm run dev:*)",
+      "Bash(curl:*)",
+      "WebFetch(domain:localhost)",
+      "Bash(npm run build:*)",
+      "Bash(node:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npm install:*)",
+      "Bash(npx playwright:*)",
+      "Bash(chmod:*)",
+      "Bash(npx:*)",
+      "Bash(where uvx)",
+      "Bash(uvx:*)",
+      "WebSearch",
+      "SlashCommand(/check-mcp)",
+      "Bash(task-master-ai init:*)",
+      "Read(//c/**)",
+      "Bash(task-master-ai generate:*)",
+      "Bash(test:*)",
+      "Bash(cat:*)",
+      "Bash(npm init:*)",
+      "Bash(npm run type-check:*)",
+      "Bash(where docker)",
+      "Bash(wsl:*)",
+      "Bash(where task-master-ai)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(if not exist types mkdir types)",
+      "Bash(grep:*)",
+      "Bash(psql:*)",
+      "Bash(docker exec:*)",
+      "Bash(docker logs:*)",
+      "Bash(taskkill:*)",
+      "Bash(ls:*)",
+      "Bash(docker:*)",
+      "Bash(start \"\" \"C:\\Program Files\\Docker\\Docker\\Docker Desktop.exe\")",
+      "Bash(powershell -Command \"Start-Sleep -Seconds 15; docker ps\")",
+      "Bash(powershell:*)",
+      "Bash(npm run lint)",
+      "Bash(if exist .next rmdir /s /q .next)",
+      "Bash(tasklist)",
+      "Bash(npm --version)",
+      "Bash($env:DEBUG=\"*\")",
+      "Bash(task-master list:*)",
+      "Bash(task-master init:*)",
+      "Bash(task-master parse-prd:*)",
+      "Bash(task-master add-task:*)",
+      "Bash(task-master generate:*)",
+      "Bash(task-master show:*)",
+      "Bash(task-master set-status:*)",
+      "Bash(npm test:*)",
+      "Bash(git rev-parse:*)",
+      "Bash(git init:*)"
+    ],
+    "deny": [],
+    "ask": []
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"C:\\Program Files\\Git\\usr\\bin\\bash.exe\" .claude/hooks/analyze-structure.sh"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"C:\\Program Files\\Git\\usr\\bin\\bash.exe\" .claude/hooks/security-scan.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"C:\\Program Files\\Git\\usr\\bin\\bash.exe\" .claude/hooks/post-tool-use.sh"
+          },
+          {
+            "type": "command",
+            "command": "\"C:\\Program Files\\Git\\usr\\bin\\bash.exe\" .claude/hooks/post-code-change.sh"
+          },
+          {
+            "type": "command",
+            "command": "\"C:\\Program Files\\Git\\usr\\bin\\bash.exe\" .claude/hooks/pre-file-create.sh"
+          },
+          {
+            "type": "command",
+            "command": "\"C:\\Program Files\\Git\\usr\\bin\\bash.exe\" .claude/hooks/post-project-change.sh"
+          },
+          {
+            "type": "command",
+            "command": "\"C:\\Program Files\\Git\\usr\\bin\\bash.exe\" .claude/hooks/build-validation.sh"
+          },
+          {
+            "type": "command",
+            "command": "\"C:\\Program Files\\Git\\usr\\bin\\bash.exe\" .claude/hooks/type-validation.sh"
+          },
+          {
+            "type": "command",
+            "command": "\"C:\\Program Files\\Git\\usr\\bin\\bash.exe\" .claude/hooks/documentation-update.sh"
+          },
+          {
+            "type": "command",
+            "command": "\"C:\\Program Files\\Git\\usr\\bin\\bash.exe\" .claude/hooks/playwright-validation.sh"
+          },
+          {
+            "type": "command",
+            "command": "\"C:\\Program Files\\Git\\usr\\bin\\bash.exe\" .claude/hooks/post-success.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"C:\\Program Files\\Git\\usr\\bin\\bash.exe\" .claude/hooks/post-tool-use.sh"
+          },
+          {
+            "type": "command",
+            "command": "\"C:\\Program Files\\Git\\usr\\bin\\bash.exe\" .claude/hooks/post-code-change.sh"
+          },
+          {
+            "type": "command",
+            "command": "\"C:\\Program Files\\Git\\usr\\bin\\bash.exe\" .claude/hooks/build-validation.sh"
+          },
+          {
+            "type": "command",
+            "command": "\"C:\\Program Files\\Git\\usr\\bin\\bash.exe\" .claude/hooks/type-validation.sh"
+          },
+          {
+            "type": "command",
+            "command": "\"C:\\Program Files\\Git\\usr\\bin\\bash.exe\" .claude/hooks/documentation-update.sh"
+          },
+          {
+            "type": "command",
+            "command": "\"C:\\Program Files\\Git\\usr\\bin\\bash.exe\" .claude/hooks/playwright-validation.sh"
+          },
+          {
+            "type": "command",
+            "command": "\"C:\\Program Files\\Git\\usr\\bin\\bash.exe\" .claude/hooks/post-success.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"C:\\Program Files\\Git\\usr\\bin\\bash.exe\" .claude/hooks/dependency-audit.sh"
+          },
+          {
+            "type": "command",
+            "command": "\"C:\\Program Files\\Git\\usr\\bin\\bash.exe\" .claude/hooks/pre-dependency-install.sh"
+          },
+          {
+            "type": "command",
+            "command": "\"C:\\Program Files\\Git\\usr\\bin\\bash.exe\" .claude/hooks/security-scan.sh"
+          },
+          {
+            "type": "command",
+            "command": "\"C:\\Program Files\\Git\\usr\\bin\\bash.exe\" .claude/hooks/phase-completion.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "TodoWrite",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"C:\\Program Files\\Git\\usr\\bin\\bash.exe\" .claude/hooks/post-task-completion.sh"
+          },
+          {
+            "type": "command",
+            "command": "\"C:\\Program Files\\Git\\usr\\bin\\bash.exe\" .claude/hooks/playwright-validation.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"C:\\Program Files\\Git\\usr\\bin\\bash.exe\" .claude/hooks/stop.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

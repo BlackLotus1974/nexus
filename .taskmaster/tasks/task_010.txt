@@ -1,0 +1,15 @@
+# Task ID: 10
+# Title: Develop LinkedIn Connection Analysis
+# Status: pending
+# Dependencies: 8, 17
+# Priority: medium
+# Description: Analyze LinkedIn connections for network mapping and relationship strength.
+# Details:
+1. Integrate via n8n workflows for LinkedIn data.
+2. Develop linkedin/analyzer.ts for data processing.
+3. Identify mutual connections and score connection strength.
+4. Store LinkedIn data in donor intelligence_data JSONB.
+5. Create Edge Function: linkedin-connection-analyzer.
+
+# Test Strategy:
+Use n8n workflow testing to ensure data integration and processing accuracy.

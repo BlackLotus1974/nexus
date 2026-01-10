@@ -1,0 +1,16 @@
+# Task ID: 13
+# Title: Build Alignment Recommendations UI
+# Status: pending
+# Dependencies: 11, 12
+# Priority: medium
+# Description: Display alignment recommendations and suggested asks for donors and projects.
+# Details:
+1. Create components/project/AlignedDonorsList.tsx showing top donors for a project.
+2. Create components/donor/ProjectAlignments.tsx showing projects for a donor.
+3. Create components/alignment/AlignmentScore.tsx with visual score display.
+4. Create components/alignment/TalkingPoints.tsx for AI-generated talking points.
+5. Integrate into project detail and donor detail pages.
+6. Add useAlignments hook for fetching alignment data.
+
+# Test Strategy:
+E2E tests for viewing alignments on project/donor pages. Visual regression tests for alignment score display.

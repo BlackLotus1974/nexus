@@ -1,0 +1,337 @@
+{
+  "tasks": [],
+  "metadata": {
+    "projectName": "Nexus Fundraising Intelligence Platform",
+    "createdAt": "2026-01-10T00:00:00.000Z",
+    "lastUpdated": "2026-01-10T15:55:00.000Z"
+  },
+  "master": {
+    "tasks": [
+      {
+        "id": "1",
+        "title": "Implement CRM Integration Architecture",
+        "description": "Create a unified CRM integration layer that supports multiple CRM providers with a consistent interface.",
+        "details": "1. Define a CRM adapter interface in lib/crm/types.ts.\n2. Implement an abstract CRMAdapter class with common methods for CRM interactions.\n3. Create provider-specific adapter classes for each CRM.\n4. Store encrypted OAuth tokens in the crm_integrations table.\n5. Implement a mechanism to handle token refresh automatically.\n6. Log all sync operations in the activity_log table.",
+        "testStrategy": "Write unit tests for the CRM adapter interface and mock tests for provider-specific adapters to ensure bidirectional sync operations.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-01-10T17:17:27.486Z"
+      },
+      {
+        "id": "2",
+        "title": "Develop Salesforce Integration",
+        "description": "Implement Salesforce CRM integration using Salesforce REST API for donor management.",
+        "details": "1. Implement OAuth 2.0 flow for Salesforce authentication.\n2. Develop the Salesforce adapter in lib/crm/adapters/salesforce.ts.\n3. Map Salesforce Contact/Lead objects to Nexus donor schema.\n4. Implement bidirectional sync for donor records.\n5. Attach AI intelligence reports as Salesforce Notes.\n6. Sync opportunity/donation records.\n7. Handle Salesforce API rate limits using exponential backoff.\n8. Create Supabase Edge Function: crm-salesforce-sync.",
+        "testStrategy": "Use Jest and mocks to test the Salesforce OAuth flow, API calls, and ensure correct data mapping and synchronization.",
+        "priority": "high",
+        "dependencies": [
+          "1"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "3",
+        "title": "Create HubSpot Integration",
+        "description": "Develop HubSpot CRM integration using HubSpot API v3.",
+        "details": "1. Implement OAuth 2.0 flow for HubSpot authentication.\n2. Develop the HubSpot adapter in lib/crm/adapters/hubspot.ts.\n3. Map HubSpot Contact objects to Nexus donor schema.\n4. Sync contact properties and custom fields.\n5. Create deals from project alignments.\n6. Handle HubSpot API rate limits.\n7. Create Supabase Edge Function: crm-hubspot-sync.",
+        "testStrategy": "Mock HubSpot API responses and use Jest to verify OAuth flows, data mapping, and sync operations.",
+        "priority": "high",
+        "dependencies": [
+          "1"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "4",
+        "title": "Implement Bloomerang Integration",
+        "description": "Develop Bloomerang CRM integration for non-profit donor management.",
+        "details": "1. Use API key authentication for Bloomerang integration.\n2. Implement the Bloomerang adapter in lib/crm/adapters/bloomerang.ts.\n3. Map Bloomerang Constituent objects to Nexus donor schema.\n4. Sync donation history and giving levels.\n5. Create interactions from engagement activities.\n6. Create Supabase Edge Function: crm-bloomerang-sync.",
+        "testStrategy": "Test API key authentication, data mapping, and sync functionality with Jest and mock data.",
+        "priority": "medium",
+        "dependencies": [
+          "1"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "5",
+        "title": "Develop Kindful Integration",
+        "description": "Implement Kindful CRM integration for donor management.",
+        "details": "1. Implement OAuth or API key authentication for Kindful.\n2. Develop the Kindful adapter in lib/crm/adapters/kindful.ts.\n3. Map Kindful Contact objects to Nexus donor schema.\n4. Sync donations and campaigns.\n5. Create Supabase Edge Function: crm-kindful-sync.",
+        "testStrategy": "Validate authentication methods and data synchronization using Jest tests with mocked Kindful API.",
+        "priority": "medium",
+        "dependencies": [
+          "1"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "6",
+        "title": "Create Neon One Integration",
+        "description": "Implement Neon One CRM integration for managing donor data.",
+        "details": "1. Use API authentication for Neon One integration.\n2. Develop the Neon One adapter in lib/crm/adapters/neonone.ts.\n3. Map Neon One Account objects to Nexus donor schema.\n4. Sync membership and donation data.\n5. Create Supabase Edge Function: crm-neonone-sync.",
+        "testStrategy": "Test API authentication and data synchronization with Jest, ensuring correct data mapping.",
+        "priority": "medium",
+        "dependencies": [
+          "1"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "7",
+        "title": "Develop CRM Settings UI",
+        "description": "Create a user interface for managing CRM connections and sync settings.",
+        "details": "1. Create app/crm/page.tsx for the CRM dashboard.\n2. Implement CRMConnectionCard.tsx for each CRM provider.\n3. Develop SyncStatus.tsx to display sync history.\n4. Create ConnectCRMModal.tsx for OAuth flows.\n5. Extend the CRM slice in the Redux store.\n6. Extend the useCRMIntegrations hook for UI interactions.",
+        "testStrategy": "Use Playwright for end-to-end testing of the CRM settings UI, OAuth flows, and Redux state updates.",
+        "priority": "medium",
+        "dependencies": [
+          "1"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "8",
+        "title": "Enhance Relationship Database Schema",
+        "description": "Enhance the existing relationships table and create supporting structures for relationship mapping.",
+        "details": "1. Add a relationship_type enum to the database.\n2. Create a relationship_connections table for indirect connections.\n3. Add a warm_path_score calculation field.\n4. Implement a database function for path finding queries.\n5. Create migration: 20241012_relationship_enhancements.sql.",
+        "testStrategy": "Write integration tests to validate database migrations and the functionality of path finding queries.",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "9",
+        "title": "Implement Email Integration for Relationship Analysis",
+        "description": "Connect to email providers for communication pattern analysis.",
+        "details": "1. Implement OAuth 2.0 flows for Google Workspace and Microsoft 365.\n2. Create gmail.ts and outlook.ts adapters for email analysis.\n3. Analyze email metadata for frequency, recency, and tone.\n4. Extract relationship signals and store in relationships table.\n5. Create Edge Function: email-relationship-analyzer.",
+        "testStrategy": "Mock email API responses and validate metadata analysis and storage with integration tests.",
+        "priority": "medium",
+        "dependencies": [
+          "8"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "10",
+        "title": "Develop LinkedIn Connection Analysis",
+        "description": "Analyze LinkedIn connections for network mapping and relationship strength.",
+        "details": "1. Integrate via n8n workflows for LinkedIn data.\n2. Develop linkedin/analyzer.ts for data processing.\n3. Identify mutual connections and score connection strength.\n4. Store LinkedIn data in donor intelligence_data JSONB.\n5. Create Edge Function: linkedin-connection-analyzer.",
+        "testStrategy": "Use n8n workflow testing to ensure data integration and processing accuracy.",
+        "priority": "medium",
+        "dependencies": [
+          "8",
+          "17"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "11",
+        "title": "Build Project Management UI",
+        "description": "Create complete UI for managing fundraising projects with list, detail, and creation views.",
+        "details": "1. Create app/projects/page.tsx for project list with grid layout.\n2. Create app/projects/[id]/page.tsx for project detail view.\n3. Create app/projects/new/page.tsx for creating projects.\n4. Build components/project/ProjectCard.tsx for project summaries.\n5. Build components/project/ProjectForm.tsx for project creation/editing.\n6. Build components/project/ConceptNoteUpload.tsx for document uploads.\n7. Extend useProjects hook in lib/hooks/useProjects.ts for CRUD operations.\n8. Add project slice to Redux store if needed.",
+        "testStrategy": "Use Playwright E2E tests for project CRUD flows. Jest unit tests for ProjectForm validation and useProjects hook.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "12",
+        "title": "Implement Project-Donor Alignment Algorithm",
+        "description": "AI-powered matching of donors to projects based on interests and giving patterns.",
+        "details": "1. Create lib/ai/alignment.ts for alignment scoring logic.\n2. Analyze donor interests from intelligence_data JSONB field.\n3. Match against project concept_note and description fields.\n4. Generate alignment score (0-100) with detailed reasoning.\n5. Store results in donor_project_alignments table.\n6. Add analyzeProjectAlignment method to AI orchestrator.\n7. Create Edge Function: project-alignment-generator.\n8. Implement batch alignment calculation for new projects.",
+        "testStrategy": "Unit tests for alignment scoring algorithm. Integration tests with mock AI responses. E2E tests for alignment flow.",
+        "priority": "high",
+        "dependencies": [
+          "11"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "13",
+        "title": "Build Alignment Recommendations UI",
+        "description": "Display alignment recommendations and suggested asks for donors and projects.",
+        "details": "1. Create components/project/AlignedDonorsList.tsx showing top donors for a project.\n2. Create components/donor/ProjectAlignments.tsx showing projects for a donor.\n3. Create components/alignment/AlignmentScore.tsx with visual score display.\n4. Create components/alignment/TalkingPoints.tsx for AI-generated talking points.\n5. Integrate into project detail and donor detail pages.\n6. Add useAlignments hook for fetching alignment data.",
+        "testStrategy": "E2E tests for viewing alignments on project/donor pages. Visual regression tests for alignment score display.",
+        "priority": "medium",
+        "dependencies": [
+          "11",
+          "12"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "14",
+        "title": "Implement Engagement Strategy Generator",
+        "description": "AI-generated personalized engagement recommendations for donor outreach.",
+        "details": "1. Enhance generateEngagementStrategy in lib/ai/orchestrator.ts.\n2. Consider donor history, preferences, and timing in recommendations.\n3. Recommend outreach type: email, call, meeting, event, social.\n4. Generate personalized messaging suggestions based on donor profile.\n5. Suggest follow-up cadence based on engagement patterns.\n6. Create Edge Function: engagement-strategy-generator.\n7. Add engagement strategy to donor intelligence brief display.",
+        "testStrategy": "Unit tests for strategy generation logic. Integration tests with AI provider mocks. User acceptance testing for recommendation quality.",
+        "priority": "high",
+        "dependencies": [
+          "12"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "15",
+        "title": "Build Email Template Generation",
+        "description": "AI-generated personalized email drafts for donor outreach scenarios.",
+        "details": "1. Create lib/ai/email-generator.ts for email generation.\n2. Generate introduction request emails with warm path context.\n3. Generate meeting request emails based on donor availability.\n4. Generate thank you emails with donation acknowledgment.\n5. Generate project update emails with impact stories.\n6. Create components/engagement/EmailDraftEditor.tsx with rich text editing.\n7. Allow customization before sending.\n8. Save email templates for reuse.",
+        "testStrategy": "Unit tests for email generation templates. E2E tests for email editing and saving flow.",
+        "priority": "medium",
+        "dependencies": [
+          "14"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "16",
+        "title": "Implement Engagement Tracking System",
+        "description": "Track outreach activities, responses, and donor engagement over time.",
+        "details": "1. Create engagements table with migration (types: email, call, meeting, event).\n2. Track outreach attempts, responses, and outcomes.\n3. Calculate engagement score per donor based on interactions.\n4. Create components/engagement/EngagementTimeline.tsx for activity history.\n5. Create components/engagement/LogEngagementModal.tsx for manual logging.\n6. Add useEngagements hook for data fetching.\n7. Update donor intelligence with engagement history.",
+        "testStrategy": "Database tests for engagement table. E2E tests for logging and viewing engagements.",
+        "priority": "medium",
+        "dependencies": [
+          "14"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "17",
+        "title": "Setup n8n Workflow Infrastructure",
+        "description": "Configure n8n for workflow automation with Supabase integration.",
+        "details": "1. Document n8n deployment options (self-hosted vs cloud).\n2. Create webhook endpoints in Supabase for n8n triggers.\n3. Set up authentication between n8n and Supabase (service role key).\n4. Create lib/n8n/webhook.ts for webhook handling.\n5. Document n8n workflow templates for common operations.\n6. Create Edge Function: n8n-webhook-handler for incoming webhooks.\n7. Set up error notification workflow for failed operations.",
+        "testStrategy": "Integration tests for webhook endpoints. Manual testing of n8n workflow execution.",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "18",
+        "title": "Implement Real-Time Database Subscriptions",
+        "description": "Supabase real-time subscriptions for live UI updates.",
+        "details": "1. Enable Supabase Realtime on donors, activity_log, and notifications tables.\n2. Create lib/supabase/realtime.ts subscription manager.\n3. Subscribe to donor updates for live intelligence refresh.\n4. Subscribe to activity_log for live activity feed.\n5. Create useRealtimeSubscription hook for components.\n6. Handle subscription cleanup on component unmount.\n7. Implement reconnection logic for dropped connections.",
+        "testStrategy": "Integration tests for subscription lifecycle. E2E tests verifying live updates appear in UI.",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "19",
+        "title": "Build Activity Feed Component",
+        "description": "Live activity feed showing system events and user actions.",
+        "details": "1. Create components/activity/ActivityFeed.tsx as main container.\n2. Create components/activity/ActivityItem.tsx for individual items.\n3. Show donor intelligence generations with AI provider used.\n4. Show CRM sync events with success/failure status.\n5. Show engagement activities (emails, calls, meetings).\n6. Add filtering by activity type and date range.\n7. Integrate with real-time subscriptions for live updates.\n8. Add infinite scroll pagination.",
+        "testStrategy": "E2E tests for activity feed filtering and pagination. Visual regression tests for activity items.",
+        "priority": "medium",
+        "dependencies": [
+          "18"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "20",
+        "title": "Implement Notification System",
+        "description": "User notifications for important events with in-app and email options.",
+        "details": "1. Create notifications table with migration (type, message, read_at, user_id).\n2. Create lib/notifications/service.ts for notification management.\n3. Build components/notifications/NotificationBell.tsx with unread count.\n4. Build components/notifications/NotificationList.tsx dropdown.\n5. Add email notification preferences to user settings.\n6. Create Edge Function: send-notification for triggering notifications.\n7. Integrate with real-time for instant notification delivery.\n8. Add notification settings page.",
+        "testStrategy": "Unit tests for notification service. E2E tests for notification display and marking as read.",
+        "priority": "medium",
+        "dependencies": [
+          "18"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "21",
+        "title": "Build Dashboard Widgets",
+        "description": "Real-time dashboard with key metrics and quick actions.",
+        "details": "1. Enhance app/dashboard/page.tsx with widget grid layout.\n2. Create components/dashboard/DonorStatsWidget.tsx (total donors, new this month).\n3. Create components/dashboard/RecentActivityWidget.tsx (latest activities).\n4. Create components/dashboard/UpcomingTasksWidget.tsx (follow-ups due).\n5. Create components/dashboard/TopAlignmentsWidget.tsx (best project-donor matches).\n6. Add skeleton loading states for all widgets.\n7. Make widgets responsive for mobile.\n8. Add widget refresh functionality.",
+        "testStrategy": "E2E tests for dashboard loading and widget display. Performance tests for widget data fetching.",
+        "priority": "medium",
+        "dependencies": [
+          "18",
+          "19"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "22",
+        "title": "Implement Advanced Donor Search",
+        "description": "Enhanced search with multiple filters and full-text search capabilities.",
+        "details": "1. Add pg_trgm extension and GIN indexes for full-text search.\n2. Create migration for search indexes on donors table.\n3. Filter by location, giving level, last contact date.\n4. Filter by alignment to specific projects.\n5. Filter by relationship strength scores.\n6. Create components/search/AdvancedSearchForm.tsx with filter controls.\n7. Add useAdvancedSearch hook with debounced queries.\n8. Implement search result highlighting.",
+        "testStrategy": "Integration tests for search query performance. E2E tests for filter combinations.",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "23",
+        "title": "Develop Warm Path Discovery Algorithm",
+        "description": "AI-powered algorithm to find best introduction paths to donors.",
+        "details": "1. Create lib/ai/warmpath.ts for path discovery logic.\n2. Implement graph traversal for shortest warm path using relationships.\n3. Score paths based on relationship strength at each step.\n4. Generate introduction request templates with context.\n5. Add warmpath discovery to AI orchestrator.\n6. Create components/donor/WarmPathDisplay.tsx showing path visualization.\n7. Create components/donor/RelationshipGraph.tsx (optional D3.js network graph).\n8. Integrate with email generation for intro requests.",
+        "testStrategy": "Unit tests for path finding algorithm. Integration tests with sample relationship data. E2E tests for warm path UI.",
+        "priority": "high",
+        "dependencies": [
+          "8",
+          "9"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "24",
+        "title": "Expand Unit Test Coverage",
+        "description": "Comprehensive Jest unit tests for all services, hooks, and utilities.",
+        "details": "1. Test all Redux slices (auth, donor, project, crm) with actions and reducers.\n2. Test all React Query hooks (useDonors, useProjects, useCRMIntegrations).\n3. Test AI service functions (orchestrator, gemini, openai).\n4. Test CRM adapters with mocked API responses.\n5. Test utility functions in lib/.\n6. Target 80% code coverage across the codebase.\n7. Add test coverage reporting to CI pipeline.\n8. Create test fixtures and factories for common data.",
+        "testStrategy": "Run Jest with coverage reporting. Configure coverage thresholds in package.json. Review uncovered lines.",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "25",
+        "title": "Implement E2E Test Scenarios",
+        "description": "Comprehensive Playwright end-to-end tests for critical user flows.",
+        "details": "1. Test complete auth flow (signup, login, logout, password reset).\n2. Test donor CRUD operations (create, view, edit, delete).\n3. Test AI intelligence generation flow with mock responses.\n4. Test CRM connection and sync flow.\n5. Test project management (create, edit, view alignments).\n6. Test search and filtering functionality.\n7. Test real-time notifications.\n8. Add visual regression tests for key pages.\n9. Configure tests to run in CI.",
+        "testStrategy": "Run Playwright tests in headless mode. Use test fixtures for authentication. Record traces on failure.",
+        "priority": "medium",
+        "dependencies": [
+          "24"
+        ],
+        "status": "pending",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "version": "1.0.0",
+      "lastModified": "2026-01-10T17:17:27.491Z",
+      "taskCount": 25,
+      "completedCount": 1,
+      "tags": [
+        "master"
+      ]
+    }
+  }
+}

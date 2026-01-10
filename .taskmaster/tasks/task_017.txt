@@ -1,0 +1,17 @@
+# Task ID: 17
+# Title: Setup n8n Workflow Infrastructure
+# Status: pending
+# Dependencies: None
+# Priority: medium
+# Description: Configure n8n for workflow automation with Supabase integration.
+# Details:
+1. Document n8n deployment options (self-hosted vs cloud).
+2. Create webhook endpoints in Supabase for n8n triggers.
+3. Set up authentication between n8n and Supabase (service role key).
+4. Create lib/n8n/webhook.ts for webhook handling.
+5. Document n8n workflow templates for common operations.
+6. Create Edge Function: n8n-webhook-handler for incoming webhooks.
+7. Set up error notification workflow for failed operations.
+
+# Test Strategy:
+Integration tests for webhook endpoints. Manual testing of n8n workflow execution.

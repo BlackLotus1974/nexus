@@ -1,0 +1,17 @@
+# Task ID: 3
+# Title: Create HubSpot Integration
+# Status: pending
+# Dependencies: 1
+# Priority: high
+# Description: Develop HubSpot CRM integration using HubSpot API v3.
+# Details:
+1. Implement OAuth 2.0 flow for HubSpot authentication.
+2. Develop the HubSpot adapter in lib/crm/adapters/hubspot.ts.
+3. Map HubSpot Contact objects to Nexus donor schema.
+4. Sync contact properties and custom fields.
+5. Create deals from project alignments.
+6. Handle HubSpot API rate limits.
+7. Create Supabase Edge Function: crm-hubspot-sync.
+
+# Test Strategy:
+Mock HubSpot API responses and use Jest to verify OAuth flows, data mapping, and sync operations.

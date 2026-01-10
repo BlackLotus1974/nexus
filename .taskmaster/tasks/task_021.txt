@@ -1,0 +1,18 @@
+# Task ID: 21
+# Title: Build Dashboard Widgets
+# Status: pending
+# Dependencies: 18, 19
+# Priority: medium
+# Description: Real-time dashboard with key metrics and quick actions.
+# Details:
+1. Enhance app/dashboard/page.tsx with widget grid layout.
+2. Create components/dashboard/DonorStatsWidget.tsx (total donors, new this month).
+3. Create components/dashboard/RecentActivityWidget.tsx (latest activities).
+4. Create components/dashboard/UpcomingTasksWidget.tsx (follow-ups due).
+5. Create components/dashboard/TopAlignmentsWidget.tsx (best project-donor matches).
+6. Add skeleton loading states for all widgets.
+7. Make widgets responsive for mobile.
+8. Add widget refresh functionality.
+
+# Test Strategy:
+E2E tests for dashboard loading and widget display. Performance tests for widget data fetching.

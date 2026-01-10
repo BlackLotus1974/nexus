@@ -1,0 +1,15 @@
+# Task ID: 8
+# Title: Enhance Relationship Database Schema
+# Status: pending
+# Dependencies: None
+# Priority: medium
+# Description: Enhance the existing relationships table and create supporting structures for relationship mapping.
+# Details:
+1. Add a relationship_type enum to the database.
+2. Create a relationship_connections table for indirect connections.
+3. Add a warm_path_score calculation field.
+4. Implement a database function for path finding queries.
+5. Create migration: 20241012_relationship_enhancements.sql.
+
+# Test Strategy:
+Write integration tests to validate database migrations and the functionality of path finding queries.

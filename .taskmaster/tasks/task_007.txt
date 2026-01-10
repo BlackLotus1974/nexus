@@ -1,0 +1,16 @@
+# Task ID: 7
+# Title: Develop CRM Settings UI
+# Status: pending
+# Dependencies: 1
+# Priority: medium
+# Description: Create a user interface for managing CRM connections and sync settings.
+# Details:
+1. Create app/crm/page.tsx for the CRM dashboard.
+2. Implement CRMConnectionCard.tsx for each CRM provider.
+3. Develop SyncStatus.tsx to display sync history.
+4. Create ConnectCRMModal.tsx for OAuth flows.
+5. Extend the CRM slice in the Redux store.
+6. Extend the useCRMIntegrations hook for UI interactions.
+
+# Test Strategy:
+Use Playwright for end-to-end testing of the CRM settings UI, OAuth flows, and Redux state updates.

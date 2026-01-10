@@ -1,0 +1,48 @@
+{
+  "projectName": "Nexus Fundraising Intelligence Platform",
+  "projectRoot": ".",
+  "specsPath": ".kiro/specs/nexus-fundraising-platform",
+  "tasksFile": "tasks.json",
+  "completedTasksFile": "completed-tasks.json",
+  "aiProvider": "anthropic",
+  "model": "claude-3-7-sonnet-20250219",
+  "researchModel": "sonar-pro",
+  "maxTokens": 64000,
+  "temperature": 0.2,
+  "defaultSubtasks": 5,
+  "defaultPriority": "medium",
+  "subagents": {
+    "auth-specialist": {
+      "description": "Supabase authentication expert. Use for auth implementation, RLS policies, OAuth, and protected routes.",
+      "usage": "authentication, authorization, user management, session handling"
+    },
+    "ui-component-builder": {
+      "description": "React component specialist. Use for building UI components with Tailwind CSS.",
+      "usage": "dashboard, forms, components, visualization, responsive design"
+    },
+    "edge-function-developer": {
+      "description": "Supabase Edge Functions specialist. Use for serverless backend logic and AI integration.",
+      "usage": "edge functions, API endpoints, webhooks, AI orchestration"
+    },
+    "state-management-expert": {
+      "description": "Redux Toolkit and React Query specialist. Use for state management and data fetching.",
+      "usage": "redux, react query, caching, global state, API integration"
+    },
+    "testing-engineer": {
+      "description": "Testing specialist. Use for writing Jest, Playwright, and RTL tests.",
+      "usage": "unit tests, integration tests, e2e tests, test coverage"
+    },
+    "ai-integration-specialist": {
+      "description": "AI service integration expert. Use for Gemini/OpenAI implementation and prompt engineering.",
+      "usage": "gemini api, openai, ai integration, prompt engineering, fallback strategies"
+    }
+  },
+  "taskCategories": {
+    "authentication": "auth-specialist",
+    "ui_components": "ui-component-builder",
+    "backend_functions": "edge-function-developer",
+    "state_management": "state-management-expert",
+    "testing": "testing-engineer",
+    "ai_services": "ai-integration-specialist"
+  }
+}

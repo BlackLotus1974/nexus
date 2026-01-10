@@ -1,0 +1,17 @@
+# Task ID: 16
+# Title: Implement Engagement Tracking System
+# Status: pending
+# Dependencies: 14
+# Priority: medium
+# Description: Track outreach activities, responses, and donor engagement over time.
+# Details:
+1. Create engagements table with migration (types: email, call, meeting, event).
+2. Track outreach attempts, responses, and outcomes.
+3. Calculate engagement score per donor based on interactions.
+4. Create components/engagement/EngagementTimeline.tsx for activity history.
+5. Create components/engagement/LogEngagementModal.tsx for manual logging.
+6. Add useEngagements hook for data fetching.
+7. Update donor intelligence with engagement history.
+
+# Test Strategy:
+Database tests for engagement table. E2E tests for logging and viewing engagements.

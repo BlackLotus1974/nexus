@@ -1,0 +1,16 @@
+# Task ID: 1
+# Title: Implement CRM Integration Architecture
+# Status: pending
+# Dependencies: None
+# Priority: high
+# Description: Create a unified CRM integration layer that supports multiple CRM providers with a consistent interface.
+# Details:
+1. Define a CRM adapter interface in lib/crm/types.ts.
+2. Implement an abstract CRMAdapter class with common methods for CRM interactions.
+3. Create provider-specific adapter classes for each CRM.
+4. Store encrypted OAuth tokens in the crm_integrations table.
+5. Implement a mechanism to handle token refresh automatically.
+6. Log all sync operations in the activity_log table.
+
+# Test Strategy:
+Write unit tests for the CRM adapter interface and mock tests for provider-specific adapters to ensure bidirectional sync operations.

@@ -1,0 +1,18 @@
+# Task ID: 24
+# Title: Expand Unit Test Coverage
+# Status: pending
+# Dependencies: None
+# Priority: medium
+# Description: Comprehensive Jest unit tests for all services, hooks, and utilities.
+# Details:
+1. Test all Redux slices (auth, donor, project, crm) with actions and reducers.
+2. Test all React Query hooks (useDonors, useProjects, useCRMIntegrations).
+3. Test AI service functions (orchestrator, gemini, openai).
+4. Test CRM adapters with mocked API responses.
+5. Test utility functions in lib/.
+6. Target 80% code coverage across the codebase.
+7. Add test coverage reporting to CI pipeline.
+8. Create test fixtures and factories for common data.
+
+# Test Strategy:
+Run Jest with coverage reporting. Configure coverage thresholds in package.json. Review uncovered lines.

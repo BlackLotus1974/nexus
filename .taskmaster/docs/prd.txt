@@ -1,0 +1,442 @@
+# Nexus Fundraising Intelligence Platform - Phase 2 PRD
+# Remaining Features Implementation Plan
+
+## Project Overview
+Nexus is an AI-powered fundraising intelligence platform for non-profits. Phase 1 (completed) established the core architecture including authentication, database schema with RLS, Redux/React Query state management, AI orchestrator with Gemini/OpenAI fallback, and basic donor management UI.
+
+Phase 2 focuses on completing the platform's core functionality including CRM integrations, relationship mapping, project-donor alignment, real-time features, and workflow automation.
+
+## Current Technology Stack (Already Implemented)
+- Frontend: React 18 + Next.js 14 (App Router) + TypeScript
+- State: Redux Toolkit + React Query
+- Styling: Tailwind CSS
+- Backend: Supabase (PostgreSQL + Edge Functions + Auth)
+- AI: Google Gemini (primary) + OpenAI (fallback)
+- Testing: Jest + Playwright
+
+## Feature 1: CRM Integration System
+
+### 1.1 CRM Integration Architecture
+Create a unified CRM integration layer that supports multiple CRM providers with a consistent interface. The system should support bidirectional sync (read from and write to CRMs).
+
+Technical Requirements:
+- Create a CRM adapter interface in lib/crm/types.ts
+- Implement abstract CRMAdapter class with common methods
+- Create provider-specific adapters for each CRM
+- Store encrypted OAuth tokens in crm_integrations table
+- Handle token refresh automatically
+- Log all sync operations in activity_log table
+
+### 1.2 Salesforce Integration
+Implement Salesforce CRM integration using Salesforce REST API.
+
+Technical Requirements:
+- OAuth 2.0 flow for Salesforce authentication
+- Implement lib/crm/adapters/salesforce.ts adapter
+- Map Salesforce Contact/Lead objects to Nexus donor schema
+- Sync donor records bidirectionally
+- Attach AI intelligence reports as Salesforce Notes
+- Sync opportunity/donation records
+- Handle Salesforce API rate limits with exponential backoff
+- Create Supabase Edge Function: crm-salesforce-sync
+
+### 1.3 HubSpot Integration
+Implement HubSpot CRM integration using HubSpot API v3.
+
+Technical Requirements:
+- OAuth 2.0 flow for HubSpot authentication
+- Implement lib/crm/adapters/hubspot.ts adapter
+- Map HubSpot Contact objects to Nexus donor schema
+- Sync contact properties and custom fields
+- Create deals from project alignments
+- Handle HubSpot API rate limits
+- Create Supabase Edge Function: crm-hubspot-sync
+
+### 1.4 Bloomerang Integration
+Implement Bloomerang CRM integration for non-profit donor management.
+
+Technical Requirements:
+- API key authentication for Bloomerang
+- Implement lib/crm/adapters/bloomerang.ts adapter
+- Map Bloomerang Constituent objects to Nexus donor schema
+- Sync donation history and giving levels
+- Create interactions from engagement activities
+- Create Supabase Edge Function: crm-bloomerang-sync
+
+### 1.5 Kindful Integration
+Implement Kindful CRM integration.
+
+Technical Requirements:
+- OAuth or API key authentication for Kindful
+- Implement lib/crm/adapters/kindful.ts adapter
+- Map Kindful Contact objects to Nexus donor schema
+- Sync donations and campaigns
+- Create Supabase Edge Function: crm-kindful-sync
+
+### 1.6 Neon One Integration
+Implement Neon One (formerly Neon CRM) integration.
+
+Technical Requirements:
+- API authentication for Neon One
+- Implement lib/crm/adapters/neonone.ts adapter
+- Map Neon One Account objects to Nexus donor schema
+- Sync membership and donation data
+- Create Supabase Edge Function: crm-neonone-sync
+
+### 1.7 CRM Settings UI
+Create UI for managing CRM connections and sync settings.
+
+Technical Requirements:
+- Create app/crm/page.tsx for CRM dashboard
+- Create components/crm/CRMConnectionCard.tsx for each provider
+- Create components/crm/SyncStatus.tsx to show sync history
+- Create components/crm/ConnectCRMModal.tsx for OAuth flow
+- Add CRM slice to Redux store (store/slices/crmSlice.ts already exists, extend it)
+- Create useCRMIntegrations hook (lib/hooks/useCRMIntegrations.ts exists, extend it)
+
+## Feature 2: Relationship Mapping & Warm Path Discovery
+
+### 2.1 Relationship Database Schema Enhancement
+Enhance the existing relationships table and create supporting structures.
+
+Technical Requirements:
+- Add relationship_type enum (colleague, board_member, donor, friend, family, etc.)
+- Create relationship_connections table for indirect connections
+- Add warm_path_score calculation field
+- Create database function for path finding queries
+- Add migration: 20241012_relationship_enhancements.sql
+
+### 2.2 Email Integration for Relationship Analysis
+Connect to Gmail/Outlook for communication pattern analysis.
+
+Technical Requirements:
+- OAuth 2.0 flow for Google Workspace
+- OAuth 2.0 flow for Microsoft 365
+- Create lib/email/gmail.ts adapter
+- Create lib/email/outlook.ts adapter
+- Analyze email frequency, recency, and tone
+- Extract relationship signals (meetings, introductions, etc.)
+- Store analysis in relationships table
+- Create Edge Function: email-relationship-analyzer
+- Respect privacy - only analyze metadata and relationship patterns
+
+### 2.3 LinkedIn Connection Analysis
+Analyze LinkedIn connections for network mapping.
+
+Technical Requirements:
+- Integration via n8n workflows (LinkedIn API is restricted)
+- Create lib/linkedin/analyzer.ts for data processing
+- Identify mutual connections between org members and donors
+- Score connection strength based on shared networks
+- Store LinkedIn data in donor intelligence_data JSONB
+- Create Edge Function: linkedin-connection-analyzer
+
+### 2.4 Warm Path Discovery Algorithm
+AI-powered algorithm to find best introduction paths to donors.
+
+Technical Requirements:
+- Create lib/ai/warmpath.ts for path discovery
+- Implement graph traversal for shortest warm path
+- Score paths based on relationship strength
+- Generate introduction request templates
+- Add to AI orchestrator as new capability
+- Create components/donor/WarmPathDisplay.tsx
+- Create components/donor/RelationshipGraph.tsx (optional D3.js visualization)
+
+### 2.5 Relationship Mapping UI
+User interface for viewing and managing relationships.
+
+Technical Requirements:
+- Create app/relationships/page.tsx
+- Create components/relationship/RelationshipList.tsx
+- Create components/relationship/RelationshipCard.tsx
+- Create components/relationship/AddRelationshipModal.tsx
+- Create useRelationships hook (extend existing in lib/hooks/)
+- Add relationship slice to Redux store
+
+## Feature 3: Project-Donor Alignment
+
+### 3.1 Project Management UI
+Complete UI for managing fundraising projects.
+
+Technical Requirements:
+- Create app/projects/page.tsx for project list
+- Create app/projects/[id]/page.tsx for project detail
+- Create app/projects/new/page.tsx for creating projects
+- Create components/project/ProjectCard.tsx
+- Create components/project/ProjectForm.tsx
+- Create components/project/ConceptNoteUpload.tsx
+- Add useProjects hook (extend lib/hooks/useProjects.ts)
+
+### 3.2 Project-Donor Alignment Algorithm
+AI-powered matching of donors to projects based on interests.
+
+Technical Requirements:
+- Create lib/ai/alignment.ts for alignment scoring
+- Analyze donor interests from intelligence_data
+- Match against project concept_note and description
+- Generate alignment score (0-100) with reasoning
+- Store results in donor_project_alignments table
+- Add to AI orchestrator
+- Create Edge Function: project-alignment-generator
+
+### 3.3 Alignment Recommendations UI
+Display alignment recommendations and suggested asks.
+
+Technical Requirements:
+- Create components/project/AlignedDonorsList.tsx
+- Create components/donor/ProjectAlignments.tsx
+- Create components/alignment/AlignmentScore.tsx
+- Show top aligned donors for each project
+- Show top aligned projects for each donor
+- Include AI-generated talking points
+
+## Feature 4: Engagement Strategy & Outreach
+
+### 4.1 Engagement Strategy Generator
+AI-generated personalized engagement recommendations.
+
+Technical Requirements:
+- Extend lib/ai/orchestrator.ts generateEngagementStrategy method
+- Consider donor history, preferences, timing
+- Recommend outreach type (email, call, meeting, event)
+- Generate personalized messaging suggestions
+- Suggest follow-up cadence
+- Create Edge Function: engagement-strategy-generator
+
+### 4.2 Email Template Generation
+AI-generated personalized email drafts.
+
+Technical Requirements:
+- Create lib/ai/email-generator.ts
+- Generate introduction request emails
+- Generate meeting request emails
+- Generate thank you emails
+- Generate project update emails
+- Allow customization and editing
+- Create components/engagement/EmailDraftEditor.tsx
+
+### 4.3 Engagement Tracking
+Track outreach activities and responses.
+
+Technical Requirements:
+- Create engagements table in database (new migration)
+- Track outreach attempts, responses, meetings
+- Calculate engagement score per donor
+- Create components/engagement/EngagementTimeline.tsx
+- Create components/engagement/LogEngagementModal.tsx
+- Add useEngagements hook
+
+## Feature 5: n8n Workflow Automation
+
+### 5.1 n8n Infrastructure Setup
+Set up n8n for workflow automation.
+
+Technical Requirements:
+- Document n8n deployment options (self-hosted or cloud)
+- Create webhook endpoints in Supabase for n8n triggers
+- Set up authentication between n8n and Supabase
+- Create lib/n8n/webhook.ts for webhook handling
+- Document n8n workflow templates
+
+### 5.2 CRM Sync Workflows
+n8n workflows for CRM synchronization.
+
+Technical Requirements:
+- Create scheduled sync workflow for each CRM
+- Handle webhook triggers from CRMs
+- Implement conflict resolution strategy
+- Log sync results to activity_log
+- Create error notification workflow
+
+### 5.3 Email/Calendar Workflows
+n8n workflows for email and calendar integration.
+
+Technical Requirements:
+- Create Gmail watching workflow
+- Create Outlook watching workflow
+- Extract meeting data from calendar
+- Trigger relationship analysis on new emails
+- Create follow-up reminder workflow
+
+### 5.4 AI Processing Workflows
+n8n workflows for batch AI operations.
+
+Technical Requirements:
+- Create batch donor intelligence refresh workflow
+- Create alignment recalculation workflow
+- Handle rate limiting for AI APIs
+- Queue management for long operations
+
+## Feature 6: Real-Time Features & Notifications
+
+### 6.1 Real-Time Database Subscriptions
+Supabase real-time subscriptions for live updates.
+
+Technical Requirements:
+- Enable Supabase Realtime on key tables
+- Create lib/supabase/realtime.ts subscription manager
+- Subscribe to donor updates
+- Subscribe to activity_log for live feed
+- Create useRealtimeSubscription hook
+
+### 6.2 Activity Feed
+Live activity feed showing system events.
+
+Technical Requirements:
+- Create components/activity/ActivityFeed.tsx
+- Create components/activity/ActivityItem.tsx
+- Show donor intelligence generations
+- Show CRM sync events
+- Show engagement activities
+- Filter by type and date
+
+### 6.3 Notification System
+User notifications for important events.
+
+Technical Requirements:
+- Create notifications table (new migration)
+- Create lib/notifications/service.ts
+- In-app notification bell component
+- Email notification preferences
+- Create components/notifications/NotificationBell.tsx
+- Create components/notifications/NotificationList.tsx
+- Create useNotifications hook
+
+### 6.4 Dashboard Widgets
+Real-time dashboard with key metrics.
+
+Technical Requirements:
+- Enhance app/dashboard/page.tsx
+- Create components/dashboard/DonorStatsWidget.tsx
+- Create components/dashboard/RecentActivityWidget.tsx
+- Create components/dashboard/UpcomingTasksWidget.tsx
+- Create components/dashboard/TopAlignmentsWidget.tsx
+- Add loading skeletons for all widgets
+
+## Feature 7: Advanced Search & Filtering
+
+### 7.1 Advanced Donor Search
+Enhanced search with multiple filters.
+
+Technical Requirements:
+- Create full-text search on donors table (pg_trgm)
+- Add migration for search indexes
+- Filter by location, giving level, engagement score
+- Filter by alignment to specific projects
+- Filter by relationship strength
+- Create components/search/AdvancedSearchForm.tsx
+- Create useAdvancedSearch hook
+
+### 7.2 Saved Searches & Lists
+Save and manage custom donor lists.
+
+Technical Requirements:
+- Create saved_searches table (new migration)
+- Create donor_lists table for manual lists
+- Create components/search/SavedSearches.tsx
+- Create components/lists/DonorList.tsx
+- Export functionality (CSV, PDF)
+
+## Feature 8: Testing & Quality Assurance
+
+### 8.1 Unit Test Coverage
+Expand Jest unit test coverage.
+
+Technical Requirements:
+- Test all Redux slices
+- Test all React Query hooks
+- Test AI service functions
+- Test CRM adapters
+- Test utility functions
+- Target 80% code coverage
+
+### 8.2 E2E Test Scenarios
+Expand Playwright E2E tests.
+
+Technical Requirements:
+- Test complete auth flow
+- Test donor CRUD operations
+- Test AI intelligence generation
+- Test CRM connection flow
+- Test project management
+- Test search and filtering
+
+### 8.3 Integration Tests
+API and integration testing.
+
+Technical Requirements:
+- Test Supabase Edge Functions
+- Test CRM API integrations (with mocks)
+- Test real-time subscriptions
+- Test webhook handlers
+
+## Feature 9: Security & Compliance
+
+### 9.1 Security Audit
+Review and enhance security measures.
+
+Technical Requirements:
+- Audit all RLS policies
+- Review API key handling
+- Implement rate limiting on Edge Functions
+- Add input sanitization review
+- Document security practices
+
+### 9.2 Data Privacy Features
+GDPR/CCPA compliance features.
+
+Technical Requirements:
+- Create data export feature for users
+- Create data deletion feature
+- Add consent tracking
+- Create privacy settings page
+- Document data retention policies
+
+## Feature 10: Performance & Optimization
+
+### 10.1 Performance Monitoring
+Add performance tracking.
+
+Technical Requirements:
+- Add performance logging to Edge Functions
+- Track API response times
+- Monitor AI operation latency
+- Create performance dashboard (optional)
+
+### 10.2 Caching Strategy
+Implement caching for improved performance.
+
+Technical Requirements:
+- Configure React Query cache policies
+- Add Redis caching for frequently accessed data (optional)
+- Cache AI responses for identical queries
+- Implement stale-while-revalidate patterns
+
+### 10.3 Database Optimization
+Optimize database queries and indexes.
+
+Technical Requirements:
+- Analyze slow queries
+- Add appropriate indexes
+- Optimize RLS policy performance
+- Consider materialized views for complex queries
+
+## Implementation Priority Order
+1. CRM Integration System (highest value, enables data flow)
+2. Project-Donor Alignment (core AI feature)
+3. Relationship Mapping (differentiating feature)
+4. Engagement Strategy (completes user workflow)
+5. Real-Time Features (improves UX)
+6. n8n Workflow Automation (enables automation)
+7. Advanced Search (power user feature)
+8. Testing & QA (ensures quality)
+9. Security & Compliance (required for production)
+10. Performance Optimization (polish)
+
+## Success Metrics
+- CRM sync activation: >= 70% of organizations
+- Time to strategy: <= 2 minutes
+- User retention: >= 85%
+- NPS score: >= 65
+- Test coverage: >= 80%

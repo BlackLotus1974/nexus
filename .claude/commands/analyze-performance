@@ -1,0 +1,13 @@
+---description: Analyze performance metrics, identify bottlenecks, suggest optimizations, and create a benchmark script
+---# Goal
+Read the code in the file at path: **${ARGUMENTS}**, perform a detailed analysis to **IDENTIFY THE PERFORMANCE BOTTLENECK**, **Suggest optimizations** for the identified issues, and **Create a benchmark script** (e.g., using Node.js's `perf_hooks` or a library like `autocannon` or `benchmark.js`) to measure the impact of the suggested changes.
+
+## User Input
+File path to analyze: **${ARGUMENTS}**
+
+## 🔍 Explanation
+This command initiates a comprehensive performance review of the specified file. It will first read and analyze the code logic, data structures, and algorithms to pinpoint the primary area of inefficiency (the **bottleneck**). Next, it will provide concrete, actionable suggestions for improving the code's execution speed or resource usage. Finally, it will generate a separate script to allow the user to easily benchmark the current state and the optimized state.
+
+💡 Example Use:
+```bash
+/analyze-performance src/app.js

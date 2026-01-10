@@ -1,0 +1,18 @@
+# Task ID: 15
+# Title: Build Email Template Generation
+# Status: pending
+# Dependencies: 14
+# Priority: medium
+# Description: AI-generated personalized email drafts for donor outreach scenarios.
+# Details:
+1. Create lib/ai/email-generator.ts for email generation.
+2. Generate introduction request emails with warm path context.
+3. Generate meeting request emails based on donor availability.
+4. Generate thank you emails with donation acknowledgment.
+5. Generate project update emails with impact stories.
+6. Create components/engagement/EmailDraftEditor.tsx with rich text editing.
+7. Allow customization before sending.
+8. Save email templates for reuse.
+
+# Test Strategy:
+Unit tests for email generation templates. E2E tests for email editing and saving flow.

@@ -1,0 +1,18 @@
+# Task ID: 2
+# Title: Develop Salesforce Integration
+# Status: pending
+# Dependencies: 1
+# Priority: high
+# Description: Implement Salesforce CRM integration using Salesforce REST API for donor management.
+# Details:
+1. Implement OAuth 2.0 flow for Salesforce authentication.
+2. Develop the Salesforce adapter in lib/crm/adapters/salesforce.ts.
+3. Map Salesforce Contact/Lead objects to Nexus donor schema.
+4. Implement bidirectional sync for donor records.
+5. Attach AI intelligence reports as Salesforce Notes.
+6. Sync opportunity/donation records.
+7. Handle Salesforce API rate limits using exponential backoff.
+8. Create Supabase Edge Function: crm-salesforce-sync.
+
+# Test Strategy:
+Use Jest and mocks to test the Salesforce OAuth flow, API calls, and ensure correct data mapping and synchronization.

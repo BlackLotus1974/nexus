@@ -1,0 +1,18 @@
+# Task ID: 23
+# Title: Develop Warm Path Discovery Algorithm
+# Status: pending
+# Dependencies: 8, 9
+# Priority: high
+# Description: AI-powered algorithm to find best introduction paths to donors.
+# Details:
+1. Create lib/ai/warmpath.ts for path discovery logic.
+2. Implement graph traversal for shortest warm path using relationships.
+3. Score paths based on relationship strength at each step.
+4. Generate introduction request templates with context.
+5. Add warmpath discovery to AI orchestrator.
+6. Create components/donor/WarmPathDisplay.tsx showing path visualization.
+7. Create components/donor/RelationshipGraph.tsx (optional D3.js network graph).
+8. Integrate with email generation for intro requests.
+
+# Test Strategy:
+Unit tests for path finding algorithm. Integration tests with sample relationship data. E2E tests for warm path UI.
