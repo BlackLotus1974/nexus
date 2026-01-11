@@ -178,9 +178,11 @@ Required in `.env.local`:
 
 ```env
 NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:64321
-NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH
-SUPABASE_SERVICE_ROLE_KEY=sb_secret_N7UND0UgjKTVK-Uodkm0Hg_xSvEMPvz
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 ```
+
+> **Note:** Get actual keys from `npx supabase status` after starting local Supabase.
 
 ## Troubleshooting
 
