@@ -31,10 +31,11 @@ module.exports = {
   collectCoverageFrom: [
     'lib/**/*.{ts,tsx}',
     'components/**/*.{ts,tsx}',
+    'store/**/*.{ts,tsx}',
     '!**/*.d.ts',
     '!**/node_modules/**',
   ],
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   testPathIgnorePatterns: [
     '<rootDir>/node_modules/',
     '<rootDir>/.next/',

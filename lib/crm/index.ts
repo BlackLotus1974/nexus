@@ -108,9 +108,16 @@ export {
   registerAdapter,
 } from './service';
 
-// Adapters will be exported here as they are implemented
-// export { SalesforceAdapter } from './adapters/salesforce';
+// Adapters
+export { SalesforceAdapter } from './adapters/salesforce';
 // export { HubSpotAdapter } from './adapters/hubspot';
 // export { BloomerangAdapter } from './adapters/bloomerang';
 // export { KindfulAdapter } from './adapters/kindful';
 // export { NeonOneAdapter } from './adapters/neonone';
+
+// Auto-register available adapters
+import { registerAdapter } from './service';
+import { SalesforceAdapter } from './adapters/salesforce';
+
+// Register Salesforce adapter
+registerAdapter('salesforce', SalesforceAdapter);

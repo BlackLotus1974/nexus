@@ -2,6 +2,19 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase/client';
 import type { Relationship } from '@/types';
 import type { Database } from '@/types/database';
+import type {
+  WarmPath,
+  RelationshipType,
+  RelationshipConnection,
+  RelationshipStats,
+} from '@/lib/relationships/types';
+import {
+  findWarmPaths,
+  discoverConnections,
+  getRelationshipStats,
+  getRelationshipConnections,
+  updateConnectionStatus,
+} from '@/lib/relationships/service';
 
 type RelationshipRow = Database['public']['Tables']['relationships']['Row'];
 type RelationshipInsert = Database['public']['Tables']['relationships']['Insert'];
@@ -191,6 +204,119 @@ export function useDeleteRelationship() {
       // Invalidate all relationships
       queryClient.invalidateQueries({
         queryKey: ['relationships', organizationId],
+      });
+    },
+  });
+}
+
+// ============================================================================
+// Warm Path Discovery Hooks
+// ============================================================================
+
+/**
+ * Find warm paths to a specific donor
+ */
+export function useWarmPaths(
+  targetDonorId: string,
+  organizationId: string,
+  options?: {
+    maxHops?: number;
+    minScore?: number;
+    limit?: number;
+  }
+) {
+  return useQuery<WarmPath[], Error>({
+    queryKey: ['warmPaths', organizationId, targetDonorId, options],
+    queryFn: () =>
+      findWarmPaths({
+        organizationId,
+        targetDonorId,
+        maxHops: options?.maxHops,
+        minScore: options?.minScore,
+        limit: options?.limit,
+      }),
+    enabled: !!targetDonorId && !!organizationId,
+    staleTime: 10 * 60 * 1000, // 10 minutes
+  });
+}
+
+/**
+ * Get relationship connections for an organization
+ */
+export function useRelationshipConnections(
+  organizationId: string,
+  options?: {
+    sourceDonorId?: string;
+    targetDonorId?: string;
+    maxPathLength?: number;
+    minScore?: number;
+    status?: string;
+    limit?: number;
+  }
+) {
+  return useQuery<RelationshipConnection[], Error>({
+    queryKey: ['relationshipConnections', organizationId, options],
+    queryFn: () => getRelationshipConnections(organizationId, options),
+    enabled: !!organizationId,
+    staleTime: 5 * 60 * 1000,
+  });
+}
+
+/**
+ * Get relationship statistics for an organization
+ */
+export function useRelationshipStats(organizationId: string) {
+  return useQuery<RelationshipStats, Error>({
+    queryKey: ['relationshipStats', organizationId],
+    queryFn: () => getRelationshipStats(organizationId),
+    enabled: !!organizationId,
+    staleTime: 5 * 60 * 1000,
+  });
+}
+
+/**
+ * Discover relationship connections (runs analysis to find indirect paths)
+ */
+export function useDiscoverConnections() {
+  const queryClient = useQueryClient();
+
+  return useMutation<number, Error, string>({
+    mutationFn: (organizationId: string) => discoverConnections(organizationId),
+    onSuccess: (_, organizationId) => {
+      // Invalidate related queries
+      queryClient.invalidateQueries({
+        queryKey: ['relationshipConnections', organizationId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['warmPaths', organizationId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['relationshipStats', organizationId],
+      });
+    },
+  });
+}
+
+/**
+ * Update connection status (mark as used, declined, etc.)
+ */
+export function useUpdateConnectionStatus() {
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    RelationshipConnection,
+    Error,
+    {
+      connectionId: string;
+      status: 'active' | 'used' | 'declined' | 'expired';
+      organizationId: string;
+    }
+  >({
+    mutationFn: ({ connectionId, status }) =>
+      updateConnectionStatus(connectionId, status),
+    onSuccess: (_, { organizationId }) => {
+      queryClient.invalidateQueries({
+        queryKey: ['relationshipConnections', organizationId],
       });
     },
   });

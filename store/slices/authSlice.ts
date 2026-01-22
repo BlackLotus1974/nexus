@@ -29,10 +29,26 @@ export const initializeAuth = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       console.log('[AuthSlice] Initializing auth...');
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+
+      // Set a timeout to prevent hanging on connection issues
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        setTimeout(() => reject(new Error('Connection timeout - Supabase may not be running')), 5000);
+      });
+
+      const sessionPromise = supabase.auth.getSession();
+
+      const { data: { session }, error: sessionError } = await Promise.race([
+        sessionPromise,
+        timeoutPromise,
+      ]) as Awaited<typeof sessionPromise>;
 
       if (sessionError) {
         console.error('[AuthSlice] Session error:', sessionError);
+        // If it's a network error, clear local session to prevent retry loops
+        if (sessionError.message?.includes('fetch') || sessionError.message?.includes('network')) {
+          console.warn('[AuthSlice] Network error - clearing local session');
+          return { user: null, profile: null, session: null };
+        }
         throw sessionError;
       }
 
@@ -68,6 +84,11 @@ export const initializeAuth = createAsyncThunk(
       };
     } catch (error: any) {
       console.error('[AuthSlice] Initialize failed:', error.message);
+      // For connection errors, don't reject - just return null state to prevent loops
+      if (error.message?.includes('timeout') || error.message?.includes('fetch') || error.message?.includes('CONNECTION')) {
+        console.warn('[AuthSlice] Connection issue - continuing without auth');
+        return { user: null, profile: null, session: null };
+      }
       return rejectWithValue(error.message);
     }
   }

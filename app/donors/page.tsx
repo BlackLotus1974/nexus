@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import {
@@ -9,10 +9,16 @@ import {
   DonorListSkeleton,
   DonorGridSkeleton,
 } from '@/components/donor';
+import { AdvancedSearchForm, type AdvancedSearchFilters } from '@/components/search';
 import { Alert } from '@/components/ui/Alert';
 import { Progress } from '@/components/ui/Progress';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import { useDonors, useGenerateDonorIntelligence } from '@/lib/hooks/useDonors';
+import { usePaginatedSearch, useAvailableTags } from '@/lib/hooks/useAdvancedSearch';
+import { useProjects } from '@/lib/hooks/useProjects';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
   addToSearchHistory,
@@ -20,12 +26,16 @@ import {
   setSelectedDonor,
 } from '@/store/slices/donorSlice';
 import type { Donor } from '@/types';
+import type { AdvancedSearchResult } from '@/lib/hooks/useAdvancedSearch';
+
+type SearchMode = 'quick' | 'advanced';
 
 export default function DonorsPage() {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
   // Local state
+  const [searchMode, setSearchMode] = useState<SearchMode>('quick');
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationProgress, setGenerationProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
@@ -33,14 +43,19 @@ export default function DonorsPage() {
 
   // Redux state
   const { searchHistory } = useAppSelector((state) => state.donor);
-  const { organizationId, user, initialized } = useAppSelector((state) => state.auth);
+  const { organizationId, initialized } = useAppSelector((state) => state.auth);
 
   // Use organization ID from auth state, fallback to temp for development
   const currentOrgId = organizationId || 'temp-org-id';
 
-  // React Query hooks
+  // React Query hooks - basic donors list
   const { data: donors = [], isLoading, error: fetchError } = useDonors(currentOrgId, initialized);
   const generateIntelligence = useGenerateDonorIntelligence();
+
+  // Advanced search hooks
+  const advancedSearch = usePaginatedSearch(currentOrgId);
+  const { data: availableTags = [] } = useAvailableTags(currentOrgId, initialized);
+  const { data: projects = [] } = useProjects(currentOrgId, initialized);
 
   // Load search history from localStorage on mount
   useEffect(() => {
@@ -90,7 +105,7 @@ export default function DonorsPage() {
     }
   };
 
-  const handleSearch = async (name: string, location?: string) => {
+  const handleQuickSearch = async (name: string, location?: string) => {
     setError(null);
     setIsGenerating(true);
     setGenerationProgress(0);
@@ -129,6 +144,28 @@ export default function DonorsPage() {
     }
   };
 
+  const handleAdvancedSearch = useCallback((filters: AdvancedSearchFilters) => {
+    advancedSearch.setFilters({
+      query: filters.query,
+      location: filters.location,
+      givingLevels: filters.givingLevels,
+      donorTypes: filters.donorTypes,
+      minTotalGiving: filters.minTotalGiving,
+      maxTotalGiving: filters.maxTotalGiving,
+      lastContactAfter: filters.lastContactAfter,
+      lastContactBefore: filters.lastContactBefore,
+      lastDonationAfter: filters.lastDonationAfter,
+      lastDonationBefore: filters.lastDonationBefore,
+      tags: filters.tags,
+      projectId: filters.projectId,
+      minAlignmentScore: filters.minAlignmentScore,
+    });
+  }, [advancedSearch]);
+
+  const handleClearAdvancedSearch = useCallback(() => {
+    advancedSearch.clearFilters();
+  }, [advancedSearch]);
+
   const handleRecentSearchClick = (name: string) => {
     // Find existing donor with this name
     const existingDonor = donors.find(
@@ -138,7 +175,7 @@ export default function DonorsPage() {
     if (existingDonor) {
       router.push(`/donors/${existingDonor.id}`);
     } else {
-      handleSearch(name);
+      handleQuickSearch(name);
     }
   };
 
@@ -147,33 +184,83 @@ export default function DonorsPage() {
     router.push(`/donors/${donor.id}`);
   };
 
+  const handleAdvancedDonorClick = (result: { id: string; name: string }) => {
+    router.push(`/donors/${result.id}`);
+  };
+
   const handleClearHistory = () => {
     dispatch(clearSearchHistory());
     localStorage.removeItem('donorSearchHistory');
   };
+
+  // Convert advanced search results to Donor type for DonorList
+  const advancedResultsAsDonors: Donor[] = advancedSearch.results.map((result: AdvancedSearchResult) => ({
+    id: result.id,
+    organizationId: result.organizationId,
+    name: result.name,
+    location: result.location,
+    intelligenceData: result.intelligenceData as Donor['intelligenceData'],
+    lastUpdated: result.lastUpdated,
+    createdAt: result.createdAt,
+  }));
+
+  // Determine which data to show
+  const isUsingAdvancedSearch = searchMode === 'advanced' && Object.keys(advancedSearch.params).length > 2;
+  const displayDonors = isUsingAdvancedSearch ? advancedResultsAsDonors : donors;
+  const isLoadingData = isUsingAdvancedSearch ? advancedSearch.isLoading : isLoading;
 
   return (
     <DashboardLayout>
       <ErrorBoundary>
         <div className="max-w-7xl mx-auto">
           <div className="mb-6">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-              Donor Intelligence
-            </h1>
-            <p className="mt-2 text-gray-600 dark:text-gray-400">
-              Search for donors and generate AI-powered intelligence briefs
-            </p>
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+                  Donor Intelligence
+                </h1>
+                <p className="mt-2 text-gray-600 dark:text-gray-400">
+                  Search for donors and generate AI-powered intelligence briefs
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  variant={searchMode === 'quick' ? 'primary' : 'secondary'}
+                  onClick={() => setSearchMode('quick')}
+                  size="sm"
+                >
+                  Quick Search
+                </Button>
+                <Button
+                  variant={searchMode === 'advanced' ? 'primary' : 'secondary'}
+                  onClick={() => setSearchMode('advanced')}
+                  size="sm"
+                >
+                  Advanced Search
+                </Button>
+              </div>
+            </div>
           </div>
 
           {/* Search Form */}
           <div className="mb-6">
-            <DonorSearch
-              onSearch={handleSearch}
-              loading={isGenerating}
-              recentSearches={searchHistory.slice(0, 5)}
-              onRecentSearchClick={handleRecentSearchClick}
-              onClearHistory={handleClearHistory}
-            />
+            {searchMode === 'quick' ? (
+              <DonorSearch
+                onSearch={handleQuickSearch}
+                loading={isGenerating}
+                recentSearches={searchHistory.slice(0, 5)}
+                onRecentSearchClick={handleRecentSearchClick}
+                onClearHistory={handleClearHistory}
+              />
+            ) : (
+              <AdvancedSearchForm
+                onSearch={handleAdvancedSearch}
+                onClear={handleClearAdvancedSearch}
+                loading={advancedSearch.isFetching}
+                projects={projects.map(p => ({ id: p.id, name: p.name }))}
+                availableTags={availableTags}
+              />
+            )}
           </div>
 
           {/* Generation Progress */}
@@ -224,15 +311,65 @@ export default function DonorsPage() {
             </div>
           )}
 
+          {/* Advanced Search Error */}
+          {advancedSearch.error && (
+            <div className="mb-6">
+              <Alert variant="error" title="Search Error">
+                {advancedSearch.error instanceof Error ? advancedSearch.error.message : 'Search failed'}
+              </Alert>
+            </div>
+          )}
+
+          {/* Search Results Info (Advanced Mode) */}
+          {searchMode === 'advanced' && isUsingAdvancedSearch && (
+            <div className="mb-4">
+              <Card>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">
+                      Found <span className="font-semibold text-gray-900 dark:text-gray-100">{advancedSearch.total}</span> donors
+                    </span>
+                    {advancedSearch.isFetching && (
+                      <Badge variant="info" size="sm">Searching...</Badge>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={advancedSearch.previousPage}
+                      disabled={!advancedSearch.hasPreviousPage}
+                    >
+                      Previous
+                    </Button>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">
+                      Page {advancedSearch.currentPage + 1}
+                    </span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={advancedSearch.nextPage}
+                      disabled={!advancedSearch.hasNextPage}
+                    >
+                      Next
+                    </Button>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          )}
+
           {/* Donor List */}
           <div>
             <div className="mb-4">
               <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
-                All Donors ({donors.length})
+                {searchMode === 'advanced' && isUsingAdvancedSearch
+                  ? 'Search Results'
+                  : `All Donors (${donors.length})`}
               </h2>
             </div>
 
-            {isLoading ? (
+            {isLoadingData ? (
               viewMode === 'table' ? (
                 <DonorListSkeleton />
               ) : (
@@ -240,9 +377,9 @@ export default function DonorsPage() {
               )
             ) : (
               <DonorList
-                donors={donors}
+                donors={displayDonors}
                 onDonorClick={handleDonorClick}
-                loading={isGenerating}
+                loading={isGenerating || advancedSearch.isFetching}
               />
             )}
           </div>

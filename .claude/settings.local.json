@@ -61,11 +61,20 @@
       "Bash(task-master set-status:*)",
       "Bash(npm test:*)",
       "Bash(git rev-parse:*)",
-      "Bash(git init:*)"
+      "Bash(git init:*)",
+      "Bash(git commit:*)",
+      "mcp__MCP_DOCKER__get_me",
+      "Skill(ralph-loop:ralph-loop)",
+      "Bash(task-master next)",
+      "Bash(task-master expand:*)"
     ],
     "deny": [],
     "ask": []
   },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "task-master-ai"
+  ],
   "hooks": {
     "SessionStart": [
       {

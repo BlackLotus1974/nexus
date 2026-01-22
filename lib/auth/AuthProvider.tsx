@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useAppDispatch } from '@/store/hooks';
+import { useEffect, useRef } from 'react';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { initializeAuth, setUser } from '@/store/slices/authSlice';
 import { supabase } from '@/lib/supabase/client';
 import type { AuthChangeEvent, Session } from '@supabase/supabase-js';
@@ -23,10 +23,20 @@ interface AuthProviderProps {
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const dispatch = useAppDispatch();
+  const { initialized } = useAppSelector((state) => state.auth);
+  const initializingRef = useRef(false);
 
   useEffect(() => {
+    // Guard against multiple initializations (React StrictMode, fast refresh, etc.)
+    if (initialized || initializingRef.current) {
+      return;
+    }
+    initializingRef.current = true;
+
     // Initialize auth state on mount
-    dispatch(initializeAuth());
+    dispatch(initializeAuth()).finally(() => {
+      // Keep ref true to prevent re-init even if component remounts
+    });
 
     // Subscribe to auth state changes
     const {
@@ -92,7 +102,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     return () => {
       subscription.unsubscribe();
     };
-  }, [dispatch]);
+  }, [dispatch, initialized]);
 
   return <>{children}</>;
 }

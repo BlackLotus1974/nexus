@@ -18,6 +18,26 @@
 // Main orchestrator and convenience API
 export { AIOrchestrator, getAIOrchestrator, aiService } from './orchestrator';
 
+// Alignment service
+export {
+  alignmentService,
+  calculateAlignment,
+  calculateAndStoreAlignment,
+  getAlignment,
+  getProjectAlignments,
+  getDonorAlignments,
+  calculateProjectAlignmentsBatch,
+  calculateDonorAlignmentsBatch,
+  getAlignmentStats,
+  deleteAlignment,
+} from './alignment';
+export type {
+  AlignmentResult,
+  AlignmentInput,
+  BatchAlignmentOptions,
+  AlignmentStats,
+} from './alignment';
+
 // Individual service classes
 export { GeminiService, getGeminiService } from './gemini';
 export { OpenAIService, getOpenAIService } from './openai';
