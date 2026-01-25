@@ -17,6 +17,7 @@ import type {
   CRMSyncResult,
   OAuth2Credentials,
   CRMCredentials,
+  CRMActivityMetadata,
 } from '../types';
 import {
   CRMAuthError,
@@ -673,6 +674,192 @@ export class HubSpotAdapter extends BaseCRMAdapter {
   }
 
   // ===========================================================================
+  // Project Alignment Operations (HubSpot Deals)
+  // ===========================================================================
+
+  /**
+   * Create a deal from a project alignment
+   * This creates a HubSpot deal representing a potential donation opportunity
+   * based on a donor-project alignment score.
+   */
+  async createDealFromAlignment(params: {
+    donorExternalId: string;
+    donorName: string;
+    projectId: string;
+    projectName: string;
+    alignmentScore: number;
+    estimatedAmount?: number;
+    notes?: string;
+  }): Promise<{ dealId: string; success: boolean }> {
+    const {
+      donorExternalId,
+      donorName,
+      projectId,
+      projectName,
+      alignmentScore,
+      estimatedAmount,
+      notes,
+    } = params;
+
+    // Create deal properties
+    const properties: Record<string, string> = {
+      dealname: `${projectName} - ${donorName}`,
+      dealstage: this.getStageFromAlignmentScore(alignmentScore),
+      pipeline: 'default',
+      description: this.buildAlignmentDescription(params),
+      nexus_project_id: projectId,
+      nexus_alignment_score: alignmentScore.toString(),
+    };
+
+    if (estimatedAmount) {
+      properties.amount = estimatedAmount.toString();
+    }
+
+    if (notes) {
+      properties.hs_next_step = notes;
+    }
+
+    try {
+      const result = await this.withRetry(
+        () => this.makeRequest<HubSpotDeal>(
+          '/crm/v3/objects/deals',
+          {
+            method: 'POST',
+            body: JSON.stringify({ properties }),
+          }
+        ),
+        'createDealFromAlignment'
+      );
+
+      // Associate deal with contact
+      await this.makeRequest(
+        `/crm/v3/objects/deals/${result.id}/associations/contacts/${donorExternalId}/deal_to_contact`,
+        { method: 'PUT' }
+      );
+
+      await this.logActivity('crm_deal_created', {
+        provider: this.provider,
+        recordId: result.id,
+        recordType: 'deal',
+      } as CRMActivityMetadata);
+
+      return { dealId: result.id, success: true };
+    } catch (error) {
+      console.error('[HubSpot Adapter] Failed to create deal from alignment:', error);
+      return { dealId: '', success: false };
+    }
+  }
+
+  /**
+   * Bulk create deals from multiple project alignments
+   */
+  async createDealsFromAlignments(alignments: Array<{
+    donorExternalId: string;
+    donorName: string;
+    projectId: string;
+    projectName: string;
+    alignmentScore: number;
+    estimatedAmount?: number;
+  }>): Promise<{ created: number; failed: number; dealIds: string[] }> {
+    const results = {
+      created: 0,
+      failed: 0,
+      dealIds: [] as string[],
+    };
+
+    // HubSpot batch API allows up to 100 records per request
+    const batchSize = 100;
+    for (let i = 0; i < alignments.length; i += batchSize) {
+      const batch = alignments.slice(i, i + batchSize);
+
+      const inputs = batch.map((alignment) => ({
+        properties: {
+          dealname: `${alignment.projectName} - ${alignment.donorName}`,
+          dealstage: this.getStageFromAlignmentScore(alignment.alignmentScore),
+          pipeline: 'default',
+          description: this.buildAlignmentDescription(alignment),
+          nexus_project_id: alignment.projectId,
+          nexus_alignment_score: alignment.alignmentScore.toString(),
+          amount: alignment.estimatedAmount?.toString() || '',
+        },
+      }));
+
+      try {
+        const response = await this.withRetry(
+          () => this.makeRequest<{ results: HubSpotDeal[] }>(
+            '/crm/v3/objects/deals/batch/create',
+            {
+              method: 'POST',
+              body: JSON.stringify({ inputs }),
+            }
+          ),
+          'createDealsFromAlignments'
+        );
+
+        // Associate deals with contacts
+        for (let j = 0; j < response.results.length; j++) {
+          const deal = response.results[j];
+          const alignment = batch[j];
+          results.dealIds.push(deal.id);
+          results.created++;
+
+          try {
+            await this.makeRequest(
+              `/crm/v3/objects/deals/${deal.id}/associations/contacts/${alignment.donorExternalId}/deal_to_contact`,
+              { method: 'PUT' }
+            );
+          } catch {
+            console.warn(`[HubSpot] Failed to associate deal ${deal.id} with contact`);
+          }
+        }
+      } catch (error) {
+        console.error('[HubSpot Adapter] Batch deal creation failed:', error);
+        results.failed += batch.length;
+      }
+    }
+
+    return results;
+  }
+
+  /**
+   * Map alignment score to HubSpot deal stage
+   */
+  private getStageFromAlignmentScore(score: number): string {
+    // Default HubSpot pipeline stages
+    if (score >= 90) return 'qualifiedtobuy'; // High alignment - ready for ask
+    if (score >= 75) return 'presentationscheduled'; // Good alignment - present opportunity
+    if (score >= 50) return 'decisionmakerboughtin'; // Moderate alignment - decision maker engaged
+    if (score >= 25) return 'appointmentscheduled'; // Some alignment - schedule meeting
+    return 'contractsent'; // Low alignment - early stage
+  }
+
+  /**
+   * Build deal description from alignment data
+   */
+  private buildAlignmentDescription(params: {
+    projectName: string;
+    donorName: string;
+    alignmentScore: number;
+    notes?: string;
+  }): string {
+    const lines = [
+      `Project Alignment Opportunity`,
+      ``,
+      `Donor: ${params.donorName}`,
+      `Project: ${params.projectName}`,
+      `Alignment Score: ${params.alignmentScore}%`,
+      ``,
+      `This deal was automatically created by Nexus based on donor-project alignment analysis.`,
+    ];
+
+    if (params.notes) {
+      lines.push('', `Notes: ${params.notes}`);
+    }
+
+    return lines.join('\n');
+  }
+
+  // ===========================================================================
   // Utility Methods
   // ===========================================================================
 
@@ -880,19 +1067,19 @@ export class HubSpotAdapter extends BaseCRMAdapter {
     switch (objectType) {
       case 'emails':
         subject = props.hs_email_subject || 'Email';
-        description = props.hs_body_preview;
+        description = props.hs_body_preview || '';
         break;
       case 'calls':
         subject = props.hs_call_title || 'Call';
-        description = props.hs_body_preview;
+        description = props.hs_body_preview || '';
         break;
       case 'meetings':
         subject = props.hs_meeting_title || 'Meeting';
-        description = props.hs_body_preview;
+        description = props.hs_body_preview || '';
         break;
       case 'notes':
         subject = 'Note';
-        description = props.hs_note_body;
+        description = props.hs_note_body || '';
         break;
       case 'tasks':
         subject = props.hs_task_subject || 'Task';

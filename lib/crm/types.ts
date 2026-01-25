@@ -504,6 +504,7 @@ export type CRMActivityType =
   | 'crm_donor_updated'
   | 'crm_donor_synced'
   | 'crm_donation_synced'
+  | 'crm_deal_created'
   | 'crm_interaction_created'
   | 'crm_token_refreshed'
   | 'crm_error';
@@ -515,7 +516,7 @@ export interface CRMActivityMetadata {
   provider: CRMProvider;
   syncId?: string;
   recordId?: string;
-  recordType?: 'donor' | 'donation' | 'interaction';
+  recordType?: 'donor' | 'donation' | 'interaction' | 'deal';
   stats?: CRMSyncStats;
   error?: {
     code: string;
