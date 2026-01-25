@@ -7,7 +7,7 @@ import { ConnectCRMModal } from '@/components/crm/ConnectCRMModal';
 import { SyncHistoryPanel } from '@/components/crm/SyncHistoryPanel';
 import { useCRMIntegrations } from '@/lib/hooks/useCRMIntegrations';
 import { useAppSelector } from '@/store/hooks';
-import type { CRMProvider } from '@/lib/crm/types';
+import type { CRMProvider, CRMConnectionStatus } from '@/lib/crm/types';
 
 /**
  * CRM Integrations Dashboard
@@ -71,15 +71,54 @@ export default function CRMPage() {
   };
 
   const handleDisconnect = async (provider: CRMProvider) => {
-    // TODO: Implement disconnect logic
-    console.log('Disconnecting', provider);
-    await refetch();
+    if (!confirm(`Are you sure you want to disconnect ${provider}? This will remove your stored credentials.`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/crm/${provider}/disconnect`, {
+        method: 'POST',
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to disconnect');
+      }
+
+      await refetch();
+    } catch (error) {
+      console.error('Disconnect error:', error);
+      alert(`Failed to disconnect: ${(error as Error).message}`);
+    }
   };
 
   const handleSync = async (provider: CRMProvider) => {
-    // TODO: Implement sync logic
-    console.log('Syncing', provider);
-    await refetch();
+    try {
+      const response = await fetch(`/api/crm/${provider}/sync`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          direction: 'bidirectional',
+          syncDonors: true,
+          syncDonations: true,
+          syncInteractions: true,
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Sync failed');
+      }
+
+      const result = await response.json();
+      console.log('Sync result:', result);
+      await refetch();
+    } catch (error) {
+      console.error('Sync error:', error);
+      alert(`Sync failed: ${(error as Error).message}`);
+    }
   };
 
   const handleModalClose = () => {
@@ -121,7 +160,7 @@ export default function CRMPage() {
                 authType={crm.authType}
                 logo={crm.logo}
                 isConnected={!!integration}
-                syncStatus={integration?.syncStatus || undefined}
+                syncStatus={(integration?.syncStatus as CRMConnectionStatus) || undefined}
                 lastSync={integration?.lastSync || undefined}
                 isLoading={isLoading}
                 onConnect={() => handleConnect(crm.provider)}

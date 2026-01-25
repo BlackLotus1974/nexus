@@ -39,24 +39,9 @@ export function ConnectCRMModal({
     setError(null);
 
     try {
-      // Redirect to OAuth flow
-      const redirectUri = `${window.location.origin}/api/crm/oauth/callback`;
-      const state = btoa(JSON.stringify({ provider, timestamp: Date.now() }));
-
-      let authUrl: string;
-
-      switch (provider) {
-        case 'salesforce':
-          authUrl = `https://login.salesforce.com/services/oauth2/authorize?response_type=code&client_id=${process.env.NEXT_PUBLIC_SALESFORCE_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${state}`;
-          break;
-        case 'hubspot':
-          authUrl = `https://app.hubspot.com/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_HUBSPOT_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=crm.objects.contacts.read%20crm.objects.contacts.write%20crm.objects.deals.read&state=${state}`;
-          break;
-        default:
-          throw new Error('OAuth not supported for this provider');
-      }
-
-      window.location.href = authUrl;
+      // Redirect to provider-specific OAuth connect route
+      // The server-side route handles OAuth state generation and redirect
+      window.location.href = `/api/crm/${provider}/connect`;
     } catch (err) {
       setError((err as Error).message);
       setIsLoading(false);
@@ -78,19 +63,30 @@ export function ConnectCRMModal({
     setError(null);
 
     try {
-      const response = await fetch('/api/crm/connect', {
+      // Build the request body based on provider
+      let body: Record<string, string>;
+
+      switch (provider) {
+        case 'bloomerang':
+          body = { apiKey };
+          break;
+        case 'kindful':
+          body = { apiToken: apiKey };
+          break;
+        case 'neonone':
+          body = { apiKey, neonOrgId: apiSecret };
+          break;
+        default:
+          body = { apiKey };
+      }
+
+      // Call provider-specific connect endpoint
+      const response = await fetch(`/api/crm/${provider}/connect`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          provider,
-          credentials: {
-            type: 'api_key',
-            apiKey,
-            apiSecret: apiSecret || undefined,
-          },
-        }),
+        body: JSON.stringify(body),
       });
 
       if (!response.ok) {
