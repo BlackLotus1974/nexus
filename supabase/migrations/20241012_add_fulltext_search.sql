@@ -17,14 +17,36 @@ ALTER TABLE donors ADD COLUMN IF NOT EXISTS notes TEXT;
 ALTER TABLE donors ADD COLUMN IF NOT EXISTS external_id TEXT;
 ALTER TABLE donors ADD COLUMN IF NOT EXISTS source TEXT CHECK (source IN ('manual', 'salesforce', 'hubspot', 'bloomerang', 'kindful', 'neonone', 'import'));
 
--- Create a generated column for full-text search vector
-ALTER TABLE donors ADD COLUMN IF NOT EXISTS search_vector tsvector
-  GENERATED ALWAYS AS (
-    setweight(to_tsvector('english', coalesce(name, '')), 'A') ||
-    setweight(to_tsvector('english', coalesce(location, '')), 'B') ||
-    setweight(to_tsvector('english', coalesce(notes, '')), 'C') ||
-    setweight(to_tsvector('english', coalesce(array_to_string(tags, ' '), '')), 'C')
-  ) STORED;
+-- Add search_vector column (populated by trigger)
+ALTER TABLE donors ADD COLUMN IF NOT EXISTS search_vector tsvector;
+
+-- Create function to update search vector
+CREATE OR REPLACE FUNCTION update_donor_search_vector()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.search_vector :=
+    setweight(to_tsvector('english', coalesce(NEW.name, '')), 'A') ||
+    setweight(to_tsvector('english', coalesce(NEW.location, '')), 'B') ||
+    setweight(to_tsvector('english', coalesce(NEW.notes, '')), 'C') ||
+    setweight(to_tsvector('english', coalesce(array_to_string(NEW.tags, ' '), '')), 'C');
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create trigger to automatically update search vector
+DROP TRIGGER IF EXISTS trg_donors_search_vector ON donors;
+CREATE TRIGGER trg_donors_search_vector
+  BEFORE INSERT OR UPDATE OF name, location, notes, tags
+  ON donors
+  FOR EACH ROW
+  EXECUTE FUNCTION update_donor_search_vector();
+
+-- Update existing rows
+UPDATE donors SET search_vector =
+  setweight(to_tsvector('english', coalesce(name, '')), 'A') ||
+  setweight(to_tsvector('english', coalesce(location, '')), 'B') ||
+  setweight(to_tsvector('english', coalesce(notes, '')), 'C') ||
+  setweight(to_tsvector('english', coalesce(array_to_string(tags, ' '), '')), 'C');
 
 -- GIN index for full-text search
 CREATE INDEX IF NOT EXISTS idx_donors_search_vector ON donors USING GIN (search_vector);

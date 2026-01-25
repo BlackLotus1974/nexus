@@ -8,8 +8,8 @@
 ### Purpose
 This template provides AI agents with comprehensive context about the Nexus platform's current state, architecture patterns, and implementation guidelines to ensure consistent, high-quality development aligned with project goals.
 
-**Last Updated:** October 13, 2025
-**Current Version:** v0.1.0 (Active Development)
+**Last Updated:** January 25, 2026
+**Current Version:** v0.3.0 (Active Development - Major Feature Release)
 **App Status:** ✅ Running on http://localhost:3000
 
 ## Project Overview
@@ -91,25 +91,28 @@ nexus/
 │   │   ├── login/page.tsx       # ✅ Login with email/OAuth
 │   │   ├── signup/page.tsx      # ✅ Signup page
 │   │   └── forgot-password/page.tsx  # ✅ Password reset
-│   ├── dashboard/page.tsx       # ✅ Main dashboard with stats
+│   ├── dashboard/page.tsx       # ✅ Main dashboard with widgets
 │   ├── donors/                  # Donor management
 │   │   ├── page.tsx             # ✅ Donor list and search
 │   │   ├── [id]/page.tsx        # ✅ Individual donor detail
 │   │   └── demo/page.tsx        # ✅ Demo page
+│   ├── alignments/page.tsx      # ✅ Donor-project alignment dashboard
+│   ├── engagements/page.tsx     # ✅ Engagement tracking dashboard
+│   ├── crm/page.tsx             # ✅ CRM integrations dashboard
 │   ├── ui-demo/page.tsx         # ✅ Component showcase
 │   ├── layout.tsx               # ✅ Root layout with providers
 │   ├── page.tsx                 # ✅ Landing page
 │   └── globals.css              # Global styles
 ├── components/
 │   ├── ui/                      # ✅ 15+ reusable components
-│   │   ├── Button.tsx
+│   │   ├── Button.tsx           # variants: primary, secondary, outline, ghost, danger
 │   │   ├── Input.tsx
 │   │   ├── Select.tsx
 │   │   ├── Modal.tsx
 │   │   ├── Card.tsx
-│   │   ├── Badge.tsx
+│   │   ├── Badge.tsx            # variants: default, secondary, success, warning, error, destructive
 │   │   ├── Skeleton.tsx
-│   │   ├── Alert.tsx
+│   │   ├── Alert.tsx            # variants: info, success, warning, error, destructive
 │   │   └── Progress.tsx
 │   ├── donor/                   # ✅ Donor-specific components
 │   │   ├── DonorSearch.tsx      # Search form with validation
@@ -117,6 +120,43 @@ nexus/
 │   │   ├── DonorListSkeleton.tsx
 │   │   ├── IntelligenceBrief.tsx
 │   │   └── IntelligenceBriefSkeleton.tsx
+│   ├── alignment/               # ✅ NEW: Donor-project alignment components
+│   │   ├── AlignmentScore.tsx   # Visual score indicator (0-100)
+│   │   ├── TalkingPoints.tsx    # AI-generated conversation starters
+│   │   ├── AlignedDonorsList.tsx # Donors ranked by project alignment
+│   │   ├── ProjectAlignments.tsx # Projects ranked by donor alignment
+│   │   └── index.ts
+│   ├── engagement/              # ✅ NEW: Engagement tracking components
+│   │   ├── EngagementStrategyGenerator.tsx # AI-powered recommendations
+│   │   ├── EngagementTracker.tsx # Track donor interactions
+│   │   ├── EngagementForm.tsx   # Log new engagements
+│   │   └── index.ts
+│   ├── email/                   # ✅ NEW: Email components
+│   │   ├── EmailTemplateGenerator.tsx # Personalized templates
+│   │   └── index.ts
+│   ├── relationships/           # ✅ NEW: Relationship mapping
+│   │   ├── WarmPathDiscovery.tsx # Visualize relationship paths
+│   │   └── index.ts
+│   ├── crm/                     # ✅ NEW: CRM integration components
+│   │   ├── CRMConnectionCard.tsx # Provider connection status
+│   │   ├── ConnectCRMModal.tsx  # OAuth/API key connection modal
+│   │   ├── SyncHistoryPanel.tsx # Sync history and status
+│   │   └── index.ts
+│   ├── activity/                # ✅ NEW: Activity feed components
+│   │   ├── ActivityFeed.tsx     # Real-time activity stream
+│   │   ├── ActivityItem.tsx     # Individual activity entry
+│   │   └── index.ts
+│   ├── notifications/           # ✅ NEW: Notification components
+│   │   ├── NotificationBell.tsx # Header notification icon
+│   │   ├── NotificationList.tsx # Notification dropdown
+│   │   ├── NotificationItem.tsx # Individual notification
+│   │   └── index.ts
+│   ├── dashboard/               # ✅ NEW: Dashboard widgets
+│   │   ├── DashboardStats.tsx   # Key metrics cards
+│   │   ├── RecentActivity.tsx   # Activity feed widget
+│   │   ├── TopDonors.tsx        # Top donors by giving
+│   │   ├── UpcomingEngagements.tsx # Scheduled engagements
+│   │   └── index.ts
 │   ├── layout/                  # ✅ Layout components
 │   │   ├── DashboardLayout.tsx
 │   │   ├── Header.tsx
@@ -137,6 +177,24 @@ nexus/
 │   │   ├── config.ts            # Configuration
 │   │   ├── utils.ts             # Utilities
 │   │   └── index.ts             # Public API
+│   ├── algorithms/              # ✅ NEW: Graph algorithms
+│   │   ├── warm-path.ts         # Warm path discovery (BFS-based)
+│   │   └── index.ts
+│   ├── email/                   # ✅ NEW: Email analysis
+│   │   ├── email-analyzer.ts    # Sentiment, topics, action items
+│   │   └── index.ts
+│   ├── linkedin/                # ✅ NEW: LinkedIn analysis
+│   │   ├── linkedin-analyzer.ts # Profile analysis for giving potential
+│   │   └── index.ts
+│   ├── crm/                     # ✅ NEW: CRM integration layer
+│   │   ├── types.ts             # CRM provider types
+│   │   ├── adapters/            # Provider-specific adapters
+│   │   │   ├── salesforce.ts
+│   │   │   ├── hubspot.ts
+│   │   │   ├── bloomerang.ts
+│   │   │   ├── kindful.ts
+│   │   │   └── neonone.ts
+│   │   └── index.ts
 │   ├── auth/                    # ✅ Auth utilities
 │   │   ├── AuthProvider.tsx     # Auth context provider
 │   │   └── hooks.ts             # useUser, useSession
@@ -145,10 +203,13 @@ nexus/
 │   │   ├── useProjects.ts       # Project operations
 │   │   ├── useCRMIntegrations.ts
 │   │   ├── useRelationships.ts
+│   │   ├── useNotifications.ts  # ✅ NEW: Notification hooks
+│   │   ├── useRealtime.ts       # ✅ NEW: Real-time subscriptions
 │   │   └── index.ts
-│   └── react-query/
-│       ├── client.ts            # ✅ Query client config
-│       └── provider.tsx         # ✅ Provider wrapper
+│   ├── react-query/
+│   │   ├── client.ts            # ✅ Query client config
+│   │   └── provider.tsx         # ✅ Provider wrapper
+│   └── utils.ts                 # ✅ NEW: Common utilities (cn, formatCurrency, etc.)
 ├── store/                       # ✅ Redux Toolkit
 │   ├── slices/
 │   │   ├── authSlice.ts         # User auth state
@@ -171,7 +232,7 @@ nexus/
 │   │       └── cors.ts
 │   └── config.toml              # Local config
 ├── tests/
-│   └── e2e/                     # Playwright tests (infrastructure ready)
+│   └── e2e/                     # Playwright tests
 ├── .kiro/specs/                 # Project specifications
 │   └── nexus-fundraising-platform/
 │       ├── requirements.md
@@ -197,7 +258,7 @@ nexus/
 
 ## Feature Implementation Guidelines
 
-### Core Features Status (Current: October 2025)
+### Core Features Status (Current: January 2026)
 
 ✅ **FULLY IMPLEMENTED:**
 
@@ -207,6 +268,7 @@ nexus/
 - ✅ Profile auto-creation triggers
 - ✅ Supabase client/server pattern
 - ✅ Edge Function: `donor-intelligence-generator` (fully functional)
+- ✅ Real-time subscriptions with Supabase channels
 
 **Authentication & Authorization:**
 - ✅ Email/password authentication
@@ -221,6 +283,7 @@ nexus/
 - ✅ React Query integration
 - ✅ Custom hooks for all entities (donors, projects, CRM, relationships)
 - ✅ Provider hierarchy: ReduxProvider → AuthProvider → ReactQueryProvider
+- ✅ Real-time hooks (useRealtime, useNotifications)
 
 **AI Integration:**
 - ✅ AI orchestrator with automatic Gemini→OpenAI fallback
@@ -229,33 +292,67 @@ nexus/
 - ✅ Error handling with retries
 - ✅ Rate limit handling
 - ✅ Configuration via environment variables
+- ✅ Email analysis (sentiment, topics, action items)
+- ✅ LinkedIn profile analysis (giving potential scoring)
+- ✅ Engagement strategy generation
+- ✅ Personalized email template generation
 
-**UI Components (15+ components):**
+**CRM Integration Framework:**
+- ✅ CRM provider type definitions
+- ✅ CRM adapter architecture (5 adapters)
+- ✅ Salesforce adapter (OAuth2)
+- ✅ HubSpot adapter (OAuth2)
+- ✅ Bloomerang adapter (API key)
+- ✅ Kindful adapter (API key)
+- ✅ Neon One adapter (API key)
+- ✅ CRM connection UI (cards, modal, sync history)
+
+**UI Components (25+ components):**
 - ✅ Button (variants: primary, secondary, outline, ghost, danger)
 - ✅ Input (with label, error, helper text)
 - ✅ Select dropdown
 - ✅ Modal/Dialog
 - ✅ Card (with Header, Body variants)
-- ✅ Badge
-- ✅ Alert (variants: info, success, warning, error)
+- ✅ Badge (variants: default, secondary, success, warning, error, destructive)
+- ✅ Alert (variants: info, success, warning, error, destructive)
 - ✅ Progress bar (with label, percentage)
 - ✅ Skeleton loaders
 - ✅ DonorSearch form
 - ✅ DonorList (table and grid views)
 - ✅ IntelligenceBrief display
 - ✅ DashboardLayout with Header/Sidebar
+- ✅ AlignmentScore (visual score indicator)
+- ✅ TalkingPoints (AI-generated conversation starters)
+- ✅ AlignedDonorsList / ProjectAlignments
+- ✅ EngagementStrategyGenerator
+- ✅ EngagementTracker / EngagementForm
+- ✅ EmailTemplateGenerator
+- ✅ WarmPathDiscovery (relationship visualization)
+- ✅ CRMConnectionCard / ConnectCRMModal / SyncHistoryPanel
+- ✅ ActivityFeed / ActivityItem
+- ✅ NotificationBell / NotificationList
+- ✅ Dashboard widgets (stats, activity, top donors)
 
 **Pages & Routes:**
 - ✅ `/` - Landing page with features
 - ✅ `/login` - Email/OAuth login
 - ✅ `/signup` - User registration
 - ✅ `/forgot-password` - Password reset
-- ✅ `/dashboard` - Main dashboard with stats cards
+- ✅ `/dashboard` - Main dashboard with integrated widgets
 - ✅ `/donors` - Donor list with search
 - ✅ `/donors/[id]` - Donor detail page
 - ✅ `/donors/demo` - Demo page for testing
+- ✅ `/alignments` - Donor-project alignment dashboard
+- ✅ `/engagements` - Engagement tracking dashboard
+- ✅ `/crm` - CRM integrations dashboard
 - ✅ `/ui-demo` - Component showcase
 - ✅ Route protection (middleware enforces auth)
+
+**Algorithms & Analysis:**
+- ✅ Warm path discovery (graph-based BFS algorithm)
+- ✅ Email sentiment and topic analysis
+- ✅ LinkedIn profile wealth/giving indicators
+- ✅ Engagement strategy recommendations
 
 **User Experience:**
 - ✅ Loading states with skeleton loaders
@@ -265,35 +362,31 @@ nexus/
 - ✅ Recent search history (localStorage)
 - ✅ Dark mode support (Tailwind dark: classes)
 - ✅ Responsive design (mobile-friendly)
+- ✅ Real-time activity feed
+- ✅ Notification system (bell icon, dropdown)
 
 🔄 **IN PROGRESS:**
-- 🔄 Full end-to-end testing of donor intelligence workflow
-- 🔄 CRM sync button implementations (UI exists, backend pending)
+- 🔄 Full end-to-end testing of all new features
+- 🔄 CRM OAuth callback implementation
 - 🔄 Organization setup and profile completion flows
 - 🔄 Intelligence brief AI response refinements
-- 🔄 Real-time progress updates during AI generation
 
 ⏳ **NOT YET STARTED:**
-- ⏳ CRM integrations (Salesforce, HubSpot, Bloomerang, Kindful, Neon One)
 - ⏳ n8n workflow automation setup
-- ⏳ Relationship mapping via email/LinkedIn analysis
-- ⏳ Project-donor alignment analysis algorithm
-- ⏳ Engagement strategy generation
-- ⏳ Real-time notifications system
-- ⏳ Activity feed with actual data
 - ⏳ Advanced search and filtering
 - ⏳ Bulk operations
 - ⏳ Data export functionality
 - ⏳ Admin dashboard
 - ⏳ Team management
+- ⏳ Mobile application (React Native)
 
 ### Implementation Priorities
-1. **Critical**: Test and refine donor intelligence generation end-to-end
-2. **High**: CRM integration framework (Salesforce first)
-3. **High**: Relationship mapping via email analysis
-4. **Medium**: Project-donor alignment algorithm
-5. **Medium**: n8n workflow automation
-6. **Low**: Advanced analytics and reporting
+1. **Critical**: End-to-end testing of all implemented features
+2. **High**: CRM OAuth callback implementation (complete the connection flow)
+3. **High**: n8n workflow automation setup
+4. **Medium**: Advanced search and filtering capabilities
+5. **Medium**: Data export functionality
+6. **Low**: Admin dashboard and team management
 7. **Low**: Mobile optimization
 
 ## AI Integration Patterns (Fully Implemented)
@@ -338,6 +431,107 @@ const result = await orchestrator.generateDonorIntelligence({
 - **Timeouts**: 2-minute limit with progress indicators (simulated during generation)
 - **Partial Data**: Display available information, note gaps
 - **User Errors**: Clear, actionable error messages without technical jargon
+
+## Algorithm & Analysis Patterns (NEW)
+
+### Warm Path Discovery
+Located in `lib/algorithms/warm-path.ts`, this graph-based algorithm finds relationship paths between donors:
+
+```typescript
+import { discoverWarmPaths } from '@/lib/algorithms';
+
+const result = discoverWarmPaths(nodes, edges, fromUserId, toDonorId, {
+  maxDepth: 4,      // Maximum path length
+  minStrength: 3,   // Minimum relationship strength (1-10)
+  maxPaths: 5       // Maximum paths to return
+});
+// Returns: { paths: WarmPath[], bestPath: WarmPath | null, totalPathsFound: number }
+```
+
+**Features:**
+- BFS-based pathfinding for shortest paths
+- Strength-weighted path scoring
+- Configurable depth and strength thresholds
+- Returns multiple path options ranked by strength
+
+### Email Analysis
+Located in `lib/email/email-analyzer.ts`:
+
+```typescript
+import { analyzeEmail, analyzeEmailThread } from '@/lib/email';
+
+const analysis = await analyzeEmail(emailContent, {
+  extractActionItems: true,
+  detectGivingIntent: true
+});
+// Returns: { sentiment, topics, actionItems, givingIndicators, suggestedFollowUp }
+```
+
+**Capabilities:**
+- Sentiment analysis (positive/neutral/negative with confidence)
+- Topic extraction (philanthropy, projects, scheduling, etc.)
+- Action item detection
+- Giving intent indicators
+- Automated follow-up suggestions
+
+### LinkedIn Analysis
+Located in `lib/linkedin/linkedin-analyzer.ts`:
+
+```typescript
+import { analyzeLinkedInProfile } from '@/lib/linkedin';
+
+const analysis = await analyzeLinkedInProfile(profileData);
+// Returns: { givingPotentialScore, wealthIndicators, philanthropicInterests, connectionStrength }
+```
+
+**Indicators Analyzed:**
+- Current and past positions (C-suite, board roles)
+- Company sizes and types (Fortune 500, nonprofits)
+- Education (prestigious institutions)
+- Geographic location (high-wealth areas)
+- Nonprofit affiliations and volunteer work
+- Skill endorsements related to philanthropy
+
+### CRM Integration Pattern
+Located in `lib/crm/`:
+
+```typescript
+import { CRMAdapterFactory } from '@/lib/crm';
+
+const adapter = CRMAdapterFactory.create('salesforce', credentials);
+await adapter.connect();
+const donors = await adapter.syncDonors();
+const donations = await adapter.syncDonations();
+await adapter.disconnect();
+```
+
+**Supported Providers:**
+- Salesforce (OAuth2)
+- HubSpot (OAuth2)
+- Bloomerang (API key)
+- Kindful (API key)
+- Neon One (API key)
+
+### Real-time Subscriptions Pattern
+Located in `lib/hooks/useRealtime.ts`:
+
+```typescript
+import { useRealtime } from '@/lib/hooks';
+
+const { data, isConnected, error } = useRealtime<ActivityItem>({
+  table: 'activity_log',
+  filter: { column: 'organization_id', value: orgId },
+  orderBy: { column: 'created_at', ascending: false },
+  limit: 20
+});
+```
+
+**Features:**
+- Automatic connection management
+- Filter by any column
+- Ordering and pagination
+- Reconnection on error
+- Type-safe with generics
 
 ## User Experience Guidelines
 
@@ -559,17 +753,24 @@ npx supabase functions deploy donor-intelligence-generator # Deploy to remote
 
 ### Next Sprint (Immediate)
 - ✅ Fix TypeScript compilation errors (COMPLETED)
-- 🔄 End-to-end donor intelligence testing
+- ✅ CRM integration framework with 5 adapters (COMPLETED)
+- ✅ Email analysis for relationship mapping (COMPLETED)
+- ✅ LinkedIn profile analysis (COMPLETED)
+- ✅ Project-donor alignment UI (COMPLETED)
+- ✅ Engagement strategy generation (COMPLETED)
+- ✅ Warm path discovery algorithm (COMPLETED)
+- ✅ Activity feed and notifications (COMPLETED)
+- 🔄 End-to-end testing of all features
+- ⏳ CRM OAuth callback implementation
 - ⏳ Add error boundaries
-- ⏳ Implement unit tests for AI services
 - ⏳ Create demo video / onboarding flow
 
 ### Next Quarter (Q1 2026)
-- CRM integration framework (Salesforce first)
-- Email analysis for relationship mapping
-- Project-donor alignment algorithm
-- n8n workflow setup
+- n8n workflow automation setup
 - Beta launch with 3-5 test organizations
+- Advanced search and filtering
+- Data export functionality
+- Team management features
 
 ### Long-term Vision (2026+)
 - Predictive donor scoring (ML model)
@@ -616,4 +817,4 @@ When working on this project, **ALWAYS**:
 
 **Remember**: We're building a platform that fundraisers will rely on daily. Every interaction should feel fast, intelligent, and trustworthy. Code quality matters. User experience matters. Security matters.
 
-**Current App Status**: ✅ **Fully Functional** - Running on http://localhost:3000 with core features implemented and ready for end-to-end testing.
+**Current App Status**: ✅ **Fully Functional** - Running on http://localhost:3000 with comprehensive feature set including CRM integration framework, donor-project alignment, engagement tracking, warm path discovery, email/LinkedIn analysis, real-time activity feed, and notification system. Ready for end-to-end testing and beta deployment.

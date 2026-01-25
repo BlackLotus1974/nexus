@@ -4,7 +4,7 @@ import React from 'react';
 
 export interface AlertProps {
   children: React.ReactNode;
-  variant?: 'info' | 'success' | 'warning' | 'error';
+  variant?: 'info' | 'success' | 'warning' | 'error' | 'destructive';
   title?: string;
   onClose?: () => void;
   className?: string;
@@ -17,6 +17,8 @@ export function Alert({
   onClose,
   className = ''
 }: AlertProps) {
+  // Map 'destructive' to 'error' for backwards compatibility
+  const effectiveVariant = variant === 'destructive' ? 'error' : variant;
   const variantStyles = {
     info: {
       container: 'bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800',
@@ -67,13 +69,13 @@ export function Alert({
     ),
   };
 
-  const styles = variantStyles[variant];
+  const styles = variantStyles[effectiveVariant];
 
   return (
     <div className={`rounded-lg border p-4 ${styles.container} ${className}`} role="alert">
       <div className="flex">
         <div className={`flex-shrink-0 ${styles.icon}`}>
-          {icons[variant]}
+          {icons[effectiveVariant]}
         </div>
         <div className="ml-3 flex-1">
           {title && (
