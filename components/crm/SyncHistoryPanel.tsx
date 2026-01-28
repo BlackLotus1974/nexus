@@ -2,11 +2,19 @@
 
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
-import type { CRMIntegration, CRMProvider } from '@/lib/crm/types';
+import type { CRMProvider } from '@/lib/crm/types';
 import { getCRMDisplayName } from '@/lib/crm/adapters';
 
+interface SyncHistoryIntegration {
+  id: string;
+  crmType: CRMProvider;
+  syncStatus: string | null;
+  lastSync?: Date | string | null;
+  syncConfig?: { syncFrequencyMinutes?: number } | Record<string, unknown>;
+}
+
 interface SyncHistoryPanelProps {
-  integrations: CRMIntegration[];
+  integrations: SyncHistoryIntegration[];
 }
 
 /**
@@ -34,7 +42,7 @@ export function SyncHistoryPanel({ integrations }: SyncHistoryPanelProps) {
     );
   }
 
-  const formatDate = (date: Date | string | null) => {
+  const formatDate = (date: Date | string | null | undefined) => {
     if (!date) return 'Never';
     const d = typeof date === 'string' ? new Date(date) : date;
     return d.toLocaleString();
@@ -84,11 +92,14 @@ export function SyncHistoryPanel({ integrations }: SyncHistoryPanelProps) {
 
               {integration.syncConfig && (
                 <div className="text-sm text-gray-500 hidden sm:block">
-                  {integration.syncConfig.syncFrequencyMinutes > 0 ? (
-                    <span>Auto-sync every {integration.syncConfig.syncFrequencyMinutes}min</span>
-                  ) : (
-                    <span>Manual sync only</span>
-                  )}
+                  {(() => {
+                    const freq = (integration.syncConfig as { syncFrequencyMinutes?: number }).syncFrequencyMinutes;
+                    return freq && freq > 0 ? (
+                      <span>Auto-sync every {freq}min</span>
+                    ) : (
+                      <span>Manual sync only</span>
+                    );
+                  })()}
                 </div>
               )}
             </div>

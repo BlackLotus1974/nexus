@@ -36,8 +36,9 @@
       "dependencies": [
         "1"
       ],
-      "status": "pending",
-      "subtasks": []
+      "status": "done",
+      "subtasks": [],
+      "updatedAt": "2026-01-27T13:06:36.729Z"
     },
     {
       "id": "4",
@@ -49,8 +50,9 @@
       "dependencies": [
         "1"
       ],
-      "status": "pending",
-      "subtasks": []
+      "status": "done",
+      "subtasks": [],
+      "updatedAt": "2026-01-27T13:06:36.729Z"
     },
     {
       "id": "5",
@@ -62,8 +64,9 @@
       "dependencies": [
         "1"
       ],
-      "status": "pending",
-      "subtasks": []
+      "status": "done",
+      "subtasks": [],
+      "updatedAt": "2026-01-27T13:06:36.729Z"
     },
     {
       "id": "6",
@@ -75,8 +78,9 @@
       "dependencies": [
         "1"
       ],
-      "status": "pending",
-      "subtasks": []
+      "status": "done",
+      "subtasks": [],
+      "updatedAt": "2026-01-27T13:06:36.729Z"
     },
     {
       "id": "7",
@@ -88,8 +92,9 @@
       "dependencies": [
         "1"
       ],
-      "status": "pending",
-      "subtasks": []
+      "status": "done",
+      "subtasks": [],
+      "updatedAt": "2026-01-27T13:06:36.729Z"
     },
     {
       "id": "8",
@@ -99,8 +104,9 @@
       "testStrategy": "Write integration tests to validate database migrations and the functionality of path finding queries.",
       "priority": "medium",
       "dependencies": [],
-      "status": "pending",
-      "subtasks": []
+      "status": "done",
+      "subtasks": [],
+      "updatedAt": "2026-01-27T13:06:36.729Z"
     },
     {
       "id": "9",
@@ -112,8 +118,9 @@
       "dependencies": [
         "8"
       ],
-      "status": "pending",
-      "subtasks": []
+      "status": "done",
+      "subtasks": [],
+      "updatedAt": "2026-01-27T13:06:36.729Z"
     },
     {
       "id": "10",
@@ -126,8 +133,9 @@
         "8",
         "17"
       ],
-      "status": "pending",
-      "subtasks": []
+      "status": "done",
+      "subtasks": [],
+      "updatedAt": "2026-01-27T13:06:36.729Z"
     },
     {
       "id": "11",
@@ -151,8 +159,9 @@
       "dependencies": [
         "11"
       ],
-      "status": "pending",
-      "subtasks": []
+      "status": "done",
+      "subtasks": [],
+      "updatedAt": "2026-01-27T13:06:36.729Z"
     },
     {
       "id": "13",
@@ -165,8 +174,9 @@
         "11",
         "12"
       ],
-      "status": "pending",
-      "subtasks": []
+      "status": "done",
+      "subtasks": [],
+      "updatedAt": "2026-01-27T13:06:36.729Z"
     },
     {
       "id": "14",
@@ -178,8 +188,9 @@
       "dependencies": [
         "12"
       ],
-      "status": "pending",
-      "subtasks": []
+      "status": "done",
+      "subtasks": [],
+      "updatedAt": "2026-01-27T13:06:36.729Z"
     },
     {
       "id": "15",
@@ -191,8 +202,9 @@
       "dependencies": [
         "14"
       ],
-      "status": "pending",
-      "subtasks": []
+      "status": "done",
+      "subtasks": [],
+      "updatedAt": "2026-01-27T13:06:36.729Z"
     },
     {
       "id": "16",
@@ -204,8 +216,9 @@
       "dependencies": [
         "14"
       ],
-      "status": "pending",
-      "subtasks": []
+      "status": "done",
+      "subtasks": [],
+      "updatedAt": "2026-01-27T13:06:36.729Z"
     },
     {
       "id": "17",
@@ -215,8 +228,9 @@
       "testStrategy": "Integration tests for webhook endpoints. Manual testing of n8n workflow execution.",
       "priority": "medium",
       "dependencies": [],
-      "status": "pending",
-      "subtasks": []
+      "status": "done",
+      "subtasks": [],
+      "updatedAt": "2026-01-27T13:06:36.729Z"
     },
     {
       "id": "18",
@@ -226,8 +240,9 @@
       "testStrategy": "Integration tests for subscription lifecycle. E2E tests verifying live updates appear in UI.",
       "priority": "medium",
       "dependencies": [],
-      "status": "pending",
-      "subtasks": []
+      "status": "done",
+      "subtasks": [],
+      "updatedAt": "2026-01-27T13:06:36.729Z"
     },
     {
       "id": "19",
@@ -239,8 +254,9 @@
       "dependencies": [
         "18"
       ],
-      "status": "pending",
-      "subtasks": []
+      "status": "done",
+      "subtasks": [],
+      "updatedAt": "2026-01-27T13:06:36.729Z"
     },
     {
       "id": "20",
@@ -252,8 +268,9 @@
       "dependencies": [
         "18"
       ],
-      "status": "pending",
-      "subtasks": []
+      "status": "done",
+      "subtasks": [],
+      "updatedAt": "2026-01-27T13:06:36.729Z"
     },
     {
       "id": "21",
@@ -266,8 +283,9 @@
         "18",
         "19"
       ],
-      "status": "pending",
-      "subtasks": []
+      "status": "done",
+      "subtasks": [],
+      "updatedAt": "2026-01-27T13:06:36.729Z"
     },
     {
       "id": "22",
@@ -292,8 +310,9 @@
         "8",
         "9"
       ],
-      "status": "pending",
-      "subtasks": []
+      "status": "done",
+      "subtasks": [],
+      "updatedAt": "2026-01-27T13:06:36.729Z"
     },
     {
       "id": "24",
@@ -317,8 +336,9 @@
       "dependencies": [
         "24"
       ],
-      "status": "pending",
-      "subtasks": []
+      "status": "done",
+      "subtasks": [],
+      "updatedAt": "2026-01-27T13:06:36.729Z"
     }
   ],
   "metadata": {
@@ -326,9 +346,9 @@
     "createdAt": "2026-01-10T00:00:00.000Z",
     "lastUpdated": "2026-01-10T15:55:00.000Z",
     "version": "1.0.0",
-    "lastModified": "2026-01-20T22:32:46.387Z",
+    "lastModified": "2026-01-27T13:06:36.729Z",
     "taskCount": 25,
-    "completedCount": 5,
+    "completedCount": 25,
     "tags": [
       "master"
     ]
@@ -371,8 +391,9 @@
         "dependencies": [
           "1"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-01-25T11:36:22.403Z"
       },
       {
         "id": "4",
@@ -384,8 +405,9 @@
         "dependencies": [
           "1"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-01-27T13:06:36.729Z"
       },
       {
         "id": "5",
@@ -397,8 +419,9 @@
         "dependencies": [
           "1"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-01-27T13:06:36.729Z"
       },
       {
         "id": "6",
@@ -410,8 +433,9 @@
         "dependencies": [
           "1"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-01-27T13:06:36.729Z"
       },
       {
         "id": "7",
@@ -423,8 +447,9 @@
         "dependencies": [
           "1"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-01-27T13:06:36.729Z"
       },
       {
         "id": "8",
@@ -448,8 +473,9 @@
         "dependencies": [
           "8"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-01-25T05:03:36.484Z"
       },
       {
         "id": "10",
@@ -462,8 +488,9 @@
           "8",
           "17"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-01-25T05:03:51.750Z"
       },
       {
         "id": "11",
@@ -502,8 +529,9 @@
           "11",
           "12"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-01-25T05:04:05.643Z"
       },
       {
         "id": "14",
@@ -515,8 +543,9 @@
         "dependencies": [
           "12"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-01-25T05:04:22.339Z"
       },
       {
         "id": "15",
@@ -528,8 +557,9 @@
         "dependencies": [
           "14"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-01-25T05:04:39.720Z"
       },
       {
         "id": "16",
@@ -541,8 +571,9 @@
         "dependencies": [
           "14"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-01-25T05:04:58.785Z"
       },
       {
         "id": "17",
@@ -578,8 +609,9 @@
         "dependencies": [
           "18"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-01-27T13:06:36.729Z"
       },
       {
         "id": "20",
@@ -591,8 +623,9 @@
         "dependencies": [
           "18"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-01-27T13:06:36.729Z"
       },
       {
         "id": "21",
@@ -605,8 +638,9 @@
           "18",
           "19"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-01-27T13:06:36.729Z"
       },
       {
         "id": "22",
@@ -631,8 +665,9 @@
           "8",
           "9"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-01-25T05:05:19.365Z"
       },
       {
         "id": "24",
@@ -663,9 +698,9 @@
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-01-22T09:44:00.211Z",
+      "lastModified": "2026-01-27T13:06:36.729Z",
       "taskCount": 25,
-      "completedCount": 10,
+      "completedCount": 25,
       "tags": [
         "master"
       ]

@@ -24,22 +24,26 @@ interface ActivityItemProps {
  * Renders a single activity log entry with appropriate icon and formatting.
  */
 export function ActivityItem({ activity, compact = false }: ActivityItemProps) {
-  const { icon, color, label, description } = getActivityDisplay(activity);
+  const displayInfo = getActivityDisplay(activity);
+  const icon: string = displayInfo.icon;
+  const color: string = displayInfo.color;
+  const label: string = displayInfo.label;
+  const description: string | undefined = displayInfo.description;
   const timeAgo = formatTimeAgo(activity.created_at);
 
   return (
     <div className={`flex gap-3 ${compact ? 'py-2' : 'py-3'} hover:bg-gray-50 rounded-lg px-2 -mx-2 transition-colors`}>
       {/* Icon */}
       <div
-        className={`w-8 h-8 rounded-full flex items-center justify-center text-sm flex-shrink-0 ${color as string}`}
+        className={`w-8 h-8 rounded-full flex items-center justify-center text-sm flex-shrink-0 ${color}`}
       >
-        {icon as string}
+        {icon}
       </div>
 
       {/* Content */}
       <div className="flex-1 min-w-0">
         <div className={`${compact ? 'text-sm' : 'text-base'} text-gray-900`}>
-          <span className="font-medium">{label as string}</span>
+          <span className="font-medium">{label}</span>
           {activity.entity_id && activity.entity_type && (
             <Link
               href={getEntityLink(activity.entity_type, activity.entity_id)}
@@ -51,7 +55,7 @@ export function ActivityItem({ activity, compact = false }: ActivityItemProps) {
         </div>
         {description && (
           <p className={`text-gray-500 ${compact ? 'text-xs' : 'text-sm'} truncate`}>
-            {description as string}
+            {description}
           </p>
         )}
         <p className={`text-gray-400 ${compact ? 'text-xs' : 'text-xs'} mt-0.5`}>
@@ -60,9 +64,9 @@ export function ActivityItem({ activity, compact = false }: ActivityItemProps) {
       </div>
 
       {/* Status indicator for certain activity types */}
-      {activity.metadata?.status && (
+      {typeof activity.metadata?.status === 'string' && (
         <div className="flex-shrink-0">
-          <StatusBadge status={activity.metadata.status as string} />
+          <StatusBadge status={activity.metadata.status} />
         </div>
       )}
     </div>
@@ -96,7 +100,7 @@ interface ActivityDisplay {
 }
 
 function getActivityDisplay(activity: ActivityItemData): ActivityDisplay {
-  const metadata = activity.metadata || {};
+  const metadata = activity.metadata || {} as Record<string, unknown>;
 
   const activityConfig: Record<string, ActivityDisplay> = {
     // AI Activities
@@ -104,13 +108,13 @@ function getActivityDisplay(activity: ActivityItemData): ActivityDisplay {
       icon: '🤖',
       color: 'bg-purple-100',
       label: 'AI Intelligence generated for',
-      description: metadata.provider ? `Using ${metadata.provider}` : undefined,
+      description: metadata.provider ? `Using ${String(metadata.provider)}` : undefined,
     },
     ai_alignment_calculated: {
       icon: '🎯',
       color: 'bg-purple-100',
       label: 'Donor-project alignment calculated',
-      description: metadata.score ? `Score: ${metadata.score}%` : undefined,
+      description: metadata.score ? `Score: ${String(metadata.score)}%` : undefined,
     },
     ai_strategy_generated: {
       icon: '💡',
@@ -122,22 +126,22 @@ function getActivityDisplay(activity: ActivityItemData): ActivityDisplay {
     crm_connected: {
       icon: '🔗',
       color: 'bg-green-100',
-      label: `${metadata.provider || 'CRM'} connected`,
+      label: `${String(metadata.provider || 'CRM')} connected`,
     },
     crm_disconnected: {
       icon: '🔌',
       color: 'bg-gray-100',
-      label: `${metadata.provider || 'CRM'} disconnected`,
+      label: `${String(metadata.provider || 'CRM')} disconnected`,
     },
     crm_sync_started: {
       icon: '🔄',
       color: 'bg-blue-100',
-      label: `${metadata.provider || 'CRM'} sync started`,
+      label: `${String(metadata.provider || 'CRM')} sync started`,
     },
     crm_sync_completed: {
       icon: '✅',
       color: 'bg-green-100',
-      label: `${metadata.provider || 'CRM'} sync completed`,
+      label: `${String(metadata.provider || 'CRM')} sync completed`,
       description: metadata.stats
         ? `${(metadata.stats as { totalProcessed?: number }).totalProcessed || 0} records processed`
         : undefined,
@@ -145,8 +149,8 @@ function getActivityDisplay(activity: ActivityItemData): ActivityDisplay {
     crm_sync_failed: {
       icon: '❌',
       color: 'bg-red-100',
-      label: `${metadata.provider || 'CRM'} sync failed`,
-      description: (metadata.error as { message?: string })?.message,
+      label: `${String(metadata.provider || 'CRM')} sync failed`,
+      description: metadata.error ? String((metadata.error as { message?: string })?.message || '') : undefined,
     },
     crm_donor_synced: {
       icon: '👤',
@@ -164,7 +168,7 @@ function getActivityDisplay(activity: ActivityItemData): ActivityDisplay {
       icon: '📝',
       color: 'bg-indigo-100',
       label: 'Engagement logged',
-      description: metadata.type ? `Type: ${metadata.type}` : undefined,
+      description: metadata.type ? `Type: ${String(metadata.type)}` : undefined,
     },
     engagement_completed: {
       icon: '✔️',
@@ -202,13 +206,13 @@ function getActivityDisplay(activity: ActivityItemData): ActivityDisplay {
       icon: '🔍',
       color: 'bg-gray-100',
       label: 'Donor searched',
-      description: metadata.query ? `Query: ${metadata.query}` : undefined,
+      description: metadata.query ? `Query: ${String(metadata.query)}` : undefined,
     },
     donation_recorded: {
       icon: '💵',
       color: 'bg-green-100',
       label: 'Donation recorded',
-      description: metadata.amount ? `Amount: $${metadata.amount}` : undefined,
+      description: metadata.amount ? `Amount: $${String(metadata.amount)}` : undefined,
     },
 
     // Project Activities
